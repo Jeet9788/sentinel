@@ -1,0 +1,118 @@
+[
+  {
+    "feature": "V14",
+    "meanAbsContrib": 2.406476
+  },
+  {
+    "feature": "V4",
+    "meanAbsContrib": 1.961013
+  },
+  {
+    "feature": "V12",
+    "meanAbsContrib": 1.090098
+  },
+  {
+    "feature": "V11",
+    "meanAbsContrib": 0.817185
+  },
+  {
+    "feature": "V10",
+    "meanAbsContrib": 0.784983
+  },
+  {
+    "feature": "V1",
+    "meanAbsContrib": 0.535105
+  },
+  {
+    "feature": "V8",
+    "meanAbsContrib": 0.451265
+  },
+  {
+    "feature": "Amount",
+    "meanAbsContrib": 0.297635
+  },
+  {
+    "feature": "V3",
+    "meanAbsContrib": 0.242533
+  },
+  {
+    "feature": "V7",
+    "meanAbsContrib": 0.237352
+  },
+  {
+    "feature": "V19",
+    "meanAbsContrib": 0.2253
+  },
+  {
+    "feature": "V16",
+    "meanAbsContrib": 0.221588
+  },
+  {
+    "feature": "V28",
+    "meanAbsContrib": 0.208083
+  },
+  {
+    "feature": "V17",
+    "meanAbsContrib": 0.183965
+  },
+  {
+    "feature": "V18",
+    "meanAbsContrib": 0.179281
+  },
+  {
+    "feature": "V5",
+    "meanAbsContrib": 0.17468
+  },
+  {
+    "feature": "V20",
+    "meanAbsContrib": 0.162384
+  },
+  {
+    "feature": "V23",
+    "meanAbsContrib": 0.161972
+  },
+  {
+    "feature": "V25",
+    "meanAbsContrib": 0.156941
+  },
+  {
+    "feature": "V13",
+    "meanAbsContrib": 0.15376
+  },
+  {
+    "feature": "V26",
+    "meanAbsContrib": 0.149898
+  },
+  {
+    "feature": "V6",
+    "meanAbsContrib": 0.144843
+  },
+  {
+    "feature": "V15",
+    "meanAbsContrib": 0.144433
+  },
+  {
+    "feature": "V21",
+    "meanAbsContrib": 0.142306
+  },
+  {
+    "feature": "V27",
+    "meanAbsContrib": 0.140378
+  },
+  {
+    "feature": "V9",
+    "meanAbsContrib": 0.1346
+  },
+  {
+    "feature": "V22",
+    "meanAbsContrib": 0.132231
+  },
+  {
+    "feature": "V24",
+    "meanAbsContrib": 0.115838
+  },
+  {
+    "feature": "V2",
+    "meanAbsContrib": 0.107194
+  }
+]
