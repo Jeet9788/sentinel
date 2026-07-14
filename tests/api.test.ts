@@ -19,6 +19,7 @@ const { GET: casesRoute } = await import("@/app/api/cases/route");
 const { POST: resolveRoute } = await import("@/app/api/cases/[id]/resolve/route");
 const { GET: getSettings, PUT: putSettings } = await import("@/app/api/settings/route");
 const { GET: transactionsRoute } = await import("@/app/api/transactions/route");
+const { GET: cleanupRoute } = await import("@/app/api/cron/cleanup/route");
 
 /** Route handlers take a NextRequest (they read `.nextUrl`), so tests must too. */
 type NextInit = ConstructorParameters<typeof NextRequest>[1];
@@ -213,6 +214,47 @@ describe("api routes", () => {
         req("http://t/api/settings", { method: "PUT", body: JSON.stringify({ tLow: -1, tHigh: 2 }) }),
       );
       expect(res.status).toBe(400);
+    });
+  });
+
+  describe("cleanup cron", () => {
+    it("refuses to delete anything without the cron secret", async () => {
+      vi.stubEnv("CRON_SECRET", "topsecret");
+      await burstRoute();
+
+      const denied = await cleanupRoute(req("http://t/api/cron/cleanup"));
+      expect(denied.status).toBe(401);
+
+      const wrongSecret = await cleanupRoute(
+        req("http://t/api/cron/cleanup", { headers: { authorization: "Bearer guess" } }),
+      );
+      expect(wrongSecret.status).toBe(401);
+      expect(await db.select().from(transactions)).toHaveLength(10);
+
+      vi.unstubAllEnvs();
+    });
+
+    it("deletes transactions past the retention window and keeps fresh ones", async () => {
+      vi.stubEnv("CRON_SECRET", "topsecret");
+      await burstRoute();
+
+      const [old] = await db.select().from(transactions).limit(1);
+      await db
+        .update(transactions)
+        .set({ createdAt: new Date(Date.now() - 30 * 24 * 3600 * 1000) })
+        .where(eq(transactions.id, old.id));
+
+      const res = await cleanupRoute(
+        req("http://t/api/cron/cleanup", { headers: { authorization: "Bearer topsecret" } }),
+      );
+      expect(res.status).toBe(200);
+      expect((await res.json()).deleted).toBe(1);
+
+      const remaining = await db.select().from(transactions);
+      expect(remaining).toHaveLength(9);
+      expect(remaining.find((t) => t.id === old.id)).toBeUndefined();
+
+      vi.unstubAllEnvs();
     });
   });
 
