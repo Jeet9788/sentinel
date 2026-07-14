@@ -1,0 +1,11 @@
+# Training-time dependencies. Never deployed — the pipeline runs locally and
+# commits its artifacts (models/v1/*) which are all the serving function needs.
+xgboost
+scikit-learn
+pandas
+numpy
+onnx
+onnxmltools
+onnxruntime
+pytest
+httpx

@@ -1,0 +1,7 @@
+# Serving dependencies ONLY — these are what Vercel bundles into the Python function.
+# Keep this list minimal: training-only libraries (xgboost, sklearn, pandas) must never
+# appear here, or the function bundle blows past the size limit.
+fastapi
+onnxruntime
+numpy
+uvicorn
