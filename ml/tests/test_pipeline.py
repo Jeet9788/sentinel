@@ -84,6 +84,7 @@ def test_feature_stats():
     assert stats["order"] == FEATURE_NAMES
     assert len(stats["medians"]) == N_FEATURES
     assert stats["amountMedian"] > 0
+    assert stats["version"] == "v1"
 
 
 def test_shap_summary():

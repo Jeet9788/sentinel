@@ -33,6 +33,7 @@ from api.onnx_io import probability_of_fraud
 from ml.common import (
     API_MODEL_DIR,
     FEATURE_NAMES,
+    MODEL_VERSION,
     MODELS_DIR,
     N_FEATURES,
     NATIVE_MODEL,
@@ -77,6 +78,7 @@ def main() -> None:
     # to its training median, i.e. "what if this had been unremarkable?"
     medians = train[FEATURE_NAMES].median()
     stats = {
+        "version": MODEL_VERSION,
         "order": FEATURE_NAMES,
         "medians": {name: float(medians[name]) for name in FEATURE_NAMES},
         "amountMedian": float(medians["Amount"]),

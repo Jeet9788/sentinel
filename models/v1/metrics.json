@@ -1,6 +1,6 @@
 {
   "version": "v1",
-  "trainedAt": "2026-07-14T03:42:13.632423+00:00",
+  "trainedAt": "2026-07-14T03:49:06.510459+00:00",
   "algorithm": "XGBoost (gradient-boosted trees)",
   "dataset": {
     "name": "ULB credit-card fraud (OpenML 1597)",
