@@ -18,7 +18,13 @@ export type Stats = {
     openCases: number;
   };
   traffic: { hour: string; count: number; frauds: number }[];
-  histogram: { bucket: number; count: number }[];
+  histogram: {
+    bucket: number;
+    count: number;
+    approved: number;
+    review: number;
+    blocked: number;
+  }[];
 };
 
 const DAY = sql`now() - interval '24 hours'`;
@@ -41,30 +47,40 @@ export async function getStats(): Promise<Stats> {
     .from(cases)
     .where(eq(cases.status, "open"));
 
+  // Grouped by transaction time, not row-insert time, so backfilled history lands
+  // in the hour it belongs to rather than all at once when it was loaded.
   const traffic = await db
     .select({
-      hour: sql<string>`date_trunc('hour', ${transactions.createdAt})`,
+      hour: sql<string>`date_trunc('hour', ${transactions.ts})`,
       count: sql<number>`count(*)::int`,
       frauds: sql<number>`count(*) filter (where ${transactions.isFraudTruth} = true)::int`,
     })
     .from(transactions)
-    .where(gte(transactions.createdAt, DAY))
-    .groupBy(sql`date_trunc('hour', ${transactions.createdAt})`)
-    .orderBy(sql`date_trunc('hour', ${transactions.createdAt})`);
+    .where(gte(transactions.ts, DAY))
+    .groupBy(sql`date_trunc('hour', ${transactions.ts})`)
+    .orderBy(sql`date_trunc('hour', ${transactions.ts})`);
 
   // 20 buckets of width 0.05. Expect a hard spike at zero and a small one at the
   // top: a working fraud model is supposed to be bimodal, not bell-shaped.
+  //
+  // The decision split per bucket matters because a threshold can sit *inside* a
+  // bucket — with tHigh at 0.99, the whole block band is narrower than one bucket.
+  // Counting decisions rather than inferring them from the bucket's edge is the
+  // only way the chart can tell the truth about that bucket.
   const histogram = await db
     .select({
       bucket: sql<number>`least(floor(${transactions.score} * 20), 19)::int`,
       count: sql<number>`count(*)::int`,
+      approved: sql<number>`count(*) filter (where ${transactions.decision} = 'approved')::int`,
+      review: sql<number>`count(*) filter (where ${transactions.decision} = 'review')::int`,
+      blocked: sql<number>`count(*) filter (where ${transactions.decision} = 'blocked')::int`,
     })
     .from(transactions)
-    .where(and(gte(transactions.createdAt, DAY), sql`${transactions.score} is not null`))
+    .where(and(gte(transactions.ts, DAY), sql`${transactions.score} is not null`))
     .groupBy(sql`least(floor(${transactions.score} * 20), 19)::int`)
     .orderBy(sql`least(floor(${transactions.score} * 20), 19)::int`);
 
-  const byBucket = new Map(histogram.map((row) => [Number(row.bucket), Number(row.count)]));
+  const byBucket = new Map(histogram.map((row) => [Number(row.bucket), row]));
 
   return {
     kpis: {
@@ -79,9 +95,15 @@ export async function getStats(): Promise<Stats> {
       count: Number(row.count),
       frauds: Number(row.frauds),
     })),
-    histogram: Array.from({ length: 20 }, (_, i) => ({
-      bucket: Number((i * 0.05).toFixed(2)),
-      count: byBucket.get(i) ?? 0,
-    })),
+    histogram: Array.from({ length: 20 }, (_, i) => {
+      const row = byBucket.get(i);
+      return {
+        bucket: Number((i * 0.05).toFixed(2)),
+        count: Number(row?.count ?? 0),
+        approved: Number(row?.approved ?? 0),
+        review: Number(row?.review ?? 0),
+        blocked: Number(row?.blocked ?? 0),
+      };
+    }),
   };
 }

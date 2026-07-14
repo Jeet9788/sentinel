@@ -16,6 +16,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx lib/db/migrate.ts",
     "db:seed": "tsx lib/db/seed.ts",
+    "db:backfill": "node -e \"fetch('http://localhost:3000/api/simulate/backfill',{method:'POST'}).then(r=>r.json()).then(r=>console.log(r)).catch(()=>{console.error('Is the dev server running? Start it with `pnpm dev`.');process.exit(1)})\"",
     "ml:all": "python ml/download.py && python ml/train.py && python ml/export.py && python ml/make_replay.py",
     "ml:test": "python -m pytest ml -v"
   },
