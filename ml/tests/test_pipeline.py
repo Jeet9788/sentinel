@@ -103,3 +103,23 @@ def test_serving_model_is_the_exported_one():
     assert (API_MODEL_DIR / "feature_stats.json").read_text() == (
         MODELS_DIR / "feature_stats.json"
     ).read_text()
+
+
+def test_replay_pool():
+    """The simulator replays only held-out rows, so every score the live demo
+    shows is a score the model earned on data it never trained on."""
+    import gzip
+
+    from ml.common import REPLAY_POOL
+
+    rows = [json.loads(line) for line in gzip.open(REPLAY_POOL, "rt")]
+    assert 15000 <= len(rows) <= 16100
+
+    frauds = [r for r in rows if r["isFraud"]]
+    assert len(frauds) >= 70, "every holdout fraud belongs in the pool"
+
+    row = rows[0]
+    assert set(row) == {"features", "amountCents", "isFraud", "cardLast4", "merchant", "city"}
+    assert len(row["features"]) == N_FEATURES
+    assert isinstance(row["amountCents"], int)
+    assert len(row["cardLast4"]) == 4
