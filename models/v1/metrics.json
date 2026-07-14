@@ -1,0 +1,1076 @@
+{
+  "version": "v1",
+  "trainedAt": "2026-07-14T03:42:13.632423+00:00",
+  "algorithm": "XGBoost (gradient-boosted trees)",
+  "dataset": {
+    "name": "ULB credit-card fraud (OpenML 1597)",
+    "rows": 284807,
+    "frauds": 492,
+    "fraudRate": 0.001727,
+    "trainRows": 227845,
+    "testRows": 56962,
+    "testFrauds": 75,
+    "splitTime": 145247.0
+  },
+  "features": [
+    "V1",
+    "V2",
+    "V3",
+    "V4",
+    "V5",
+    "V6",
+    "V7",
+    "V8",
+    "V9",
+    "V10",
+    "V11",
+    "V12",
+    "V13",
+    "V14",
+    "V15",
+    "V16",
+    "V17",
+    "V18",
+    "V19",
+    "V20",
+    "V21",
+    "V22",
+    "V23",
+    "V24",
+    "V25",
+    "V26",
+    "V27",
+    "V28",
+    "Amount"
+  ],
+  "featureNote": "Time is excluded from the model: it counts seconds since the dataset's first transaction, so a chronological split makes the train and test ranges disjoint and the feature cannot generalize. It is used only to perform the split.",
+  "prAuc": 0.8019,
+  "rocAuc": 0.9881,
+  "params": {
+    "max_depth": 8,
+    "learning_rate": 0.05,
+    "n_estimators": 232,
+    "scale_pos_weight": 545.4,
+    "subsample": 0.9,
+    "colsample_bytree": 0.9,
+    "eval_metric": "aucpr",
+    "tree_method": "hist",
+    "random_state": 42
+  },
+  "suggested": {
+    "tLow": 0.01,
+    "tHigh": 0.99
+  },
+  "thresholdTable": [
+    {
+      "threshold": 0.0,
+      "precision": 0.0013,
+      "recall": 1.0,
+      "flaggedRate": 1.0,
+      "tp": 75,
+      "fp": 56887,
+      "fn": 0,
+      "tn": 0
+    },
+    {
+      "threshold": 0.01,
+      "precision": 0.3388,
+      "recall": 0.8267,
+      "flaggedRate": 0.003213,
+      "tp": 62,
+      "fp": 121,
+      "fn": 13,
+      "tn": 56766
+    },
+    {
+      "threshold": 0.02,
+      "precision": 0.4552,
+      "recall": 0.8133,
+      "flaggedRate": 0.002352,
+      "tp": 61,
+      "fp": 73,
+      "fn": 14,
+      "tn": 56814
+    },
+    {
+      "threshold": 0.03,
+      "precision": 0.531,
+      "recall": 0.8,
+      "flaggedRate": 0.001984,
+      "tp": 60,
+      "fp": 53,
+      "fn": 15,
+      "tn": 56834
+    },
+    {
+      "threshold": 0.04,
+      "precision": 0.6237,
+      "recall": 0.7733,
+      "flaggedRate": 0.001633,
+      "tp": 58,
+      "fp": 35,
+      "fn": 17,
+      "tn": 56852
+    },
+    {
+      "threshold": 0.05,
+      "precision": 0.6517,
+      "recall": 0.7733,
+      "flaggedRate": 0.001562,
+      "tp": 58,
+      "fp": 31,
+      "fn": 17,
+      "tn": 56856
+    },
+    {
+      "threshold": 0.06,
+      "precision": 0.6744,
+      "recall": 0.7733,
+      "flaggedRate": 0.00151,
+      "tp": 58,
+      "fp": 28,
+      "fn": 17,
+      "tn": 56859
+    },
+    {
+      "threshold": 0.07,
+      "precision": 0.6905,
+      "recall": 0.7733,
+      "flaggedRate": 0.001475,
+      "tp": 58,
+      "fp": 26,
+      "fn": 17,
+      "tn": 56861
+    },
+    {
+      "threshold": 0.08,
+      "precision": 0.7073,
+      "recall": 0.7733,
+      "flaggedRate": 0.00144,
+      "tp": 58,
+      "fp": 24,
+      "fn": 17,
+      "tn": 56863
+    },
+    {
+      "threshold": 0.09,
+      "precision": 0.725,
+      "recall": 0.7733,
+      "flaggedRate": 0.001404,
+      "tp": 58,
+      "fp": 22,
+      "fn": 17,
+      "tn": 56865
+    },
+    {
+      "threshold": 0.1,
+      "precision": 0.7436,
+      "recall": 0.7733,
+      "flaggedRate": 0.001369,
+      "tp": 58,
+      "fp": 20,
+      "fn": 17,
+      "tn": 56867
+    },
+    {
+      "threshold": 0.11,
+      "precision": 0.7632,
+      "recall": 0.7733,
+      "flaggedRate": 0.001334,
+      "tp": 58,
+      "fp": 18,
+      "fn": 17,
+      "tn": 56869
+    },
+    {
+      "threshold": 0.12,
+      "precision": 0.7733,
+      "recall": 0.7733,
+      "flaggedRate": 0.001317,
+      "tp": 58,
+      "fp": 17,
+      "fn": 17,
+      "tn": 56870
+    },
+    {
+      "threshold": 0.13,
+      "precision": 0.7838,
+      "recall": 0.7733,
+      "flaggedRate": 0.001299,
+      "tp": 58,
+      "fp": 16,
+      "fn": 17,
+      "tn": 56871
+    },
+    {
+      "threshold": 0.14,
+      "precision": 0.7808,
+      "recall": 0.76,
+      "flaggedRate": 0.001282,
+      "tp": 57,
+      "fp": 16,
+      "fn": 18,
+      "tn": 56871
+    },
+    {
+      "threshold": 0.15,
+      "precision": 0.7808,
+      "recall": 0.76,
+      "flaggedRate": 0.001282,
+      "tp": 57,
+      "fp": 16,
+      "fn": 18,
+      "tn": 56871
+    },
+    {
+      "threshold": 0.16,
+      "precision": 0.7778,
+      "recall": 0.7467,
+      "flaggedRate": 0.001264,
+      "tp": 56,
+      "fp": 16,
+      "fn": 19,
+      "tn": 56871
+    },
+    {
+      "threshold": 0.17,
+      "precision": 0.7887,
+      "recall": 0.7467,
+      "flaggedRate": 0.001246,
+      "tp": 56,
+      "fp": 15,
+      "fn": 19,
+      "tn": 56872
+    },
+    {
+      "threshold": 0.18,
+      "precision": 0.7887,
+      "recall": 0.7467,
+      "flaggedRate": 0.001246,
+      "tp": 56,
+      "fp": 15,
+      "fn": 19,
+      "tn": 56872
+    },
+    {
+      "threshold": 0.19,
+      "precision": 0.8,
+      "recall": 0.7467,
+      "flaggedRate": 0.001229,
+      "tp": 56,
+      "fp": 14,
+      "fn": 19,
+      "tn": 56873
+    },
+    {
+      "threshold": 0.2,
+      "precision": 0.8,
+      "recall": 0.7467,
+      "flaggedRate": 0.001229,
+      "tp": 56,
+      "fp": 14,
+      "fn": 19,
+      "tn": 56873
+    },
+    {
+      "threshold": 0.21,
+      "precision": 0.8116,
+      "recall": 0.7467,
+      "flaggedRate": 0.001211,
+      "tp": 56,
+      "fp": 13,
+      "fn": 19,
+      "tn": 56874
+    },
+    {
+      "threshold": 0.22,
+      "precision": 0.8116,
+      "recall": 0.7467,
+      "flaggedRate": 0.001211,
+      "tp": 56,
+      "fp": 13,
+      "fn": 19,
+      "tn": 56874
+    },
+    {
+      "threshold": 0.23,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.24,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.25,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.26,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.27,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.28,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.29,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.3,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.31,
+      "precision": 0.8358,
+      "recall": 0.7467,
+      "flaggedRate": 0.001176,
+      "tp": 56,
+      "fp": 11,
+      "fn": 19,
+      "tn": 56876
+    },
+    {
+      "threshold": 0.32,
+      "precision": 0.8485,
+      "recall": 0.7467,
+      "flaggedRate": 0.001159,
+      "tp": 56,
+      "fp": 10,
+      "fn": 19,
+      "tn": 56877
+    },
+    {
+      "threshold": 0.33,
+      "precision": 0.8485,
+      "recall": 0.7467,
+      "flaggedRate": 0.001159,
+      "tp": 56,
+      "fp": 10,
+      "fn": 19,
+      "tn": 56877
+    },
+    {
+      "threshold": 0.34,
+      "precision": 0.8485,
+      "recall": 0.7467,
+      "flaggedRate": 0.001159,
+      "tp": 56,
+      "fp": 10,
+      "fn": 19,
+      "tn": 56877
+    },
+    {
+      "threshold": 0.35,
+      "precision": 0.8485,
+      "recall": 0.7467,
+      "flaggedRate": 0.001159,
+      "tp": 56,
+      "fp": 10,
+      "fn": 19,
+      "tn": 56877
+    },
+    {
+      "threshold": 0.36,
+      "precision": 0.8615,
+      "recall": 0.7467,
+      "flaggedRate": 0.001141,
+      "tp": 56,
+      "fp": 9,
+      "fn": 19,
+      "tn": 56878
+    },
+    {
+      "threshold": 0.37,
+      "precision": 0.875,
+      "recall": 0.7467,
+      "flaggedRate": 0.001124,
+      "tp": 56,
+      "fp": 8,
+      "fn": 19,
+      "tn": 56879
+    },
+    {
+      "threshold": 0.38,
+      "precision": 0.875,
+      "recall": 0.7467,
+      "flaggedRate": 0.001124,
+      "tp": 56,
+      "fp": 8,
+      "fn": 19,
+      "tn": 56879
+    },
+    {
+      "threshold": 0.39,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.4,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.41,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.42,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.43,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.44,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.45,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.46,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.47,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.48,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.49,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.5,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.51,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.52,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.53,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.54,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.55,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.56,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.57,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.58,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.59,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.6,
+      "precision": 0.8889,
+      "recall": 0.7467,
+      "flaggedRate": 0.001106,
+      "tp": 56,
+      "fp": 7,
+      "fn": 19,
+      "tn": 56880
+    },
+    {
+      "threshold": 0.61,
+      "precision": 0.9032,
+      "recall": 0.7467,
+      "flaggedRate": 0.001088,
+      "tp": 56,
+      "fp": 6,
+      "fn": 19,
+      "tn": 56881
+    },
+    {
+      "threshold": 0.62,
+      "precision": 0.9032,
+      "recall": 0.7467,
+      "flaggedRate": 0.001088,
+      "tp": 56,
+      "fp": 6,
+      "fn": 19,
+      "tn": 56881
+    },
+    {
+      "threshold": 0.63,
+      "precision": 0.9032,
+      "recall": 0.7467,
+      "flaggedRate": 0.001088,
+      "tp": 56,
+      "fp": 6,
+      "fn": 19,
+      "tn": 56881
+    },
+    {
+      "threshold": 0.64,
+      "precision": 0.9032,
+      "recall": 0.7467,
+      "flaggedRate": 0.001088,
+      "tp": 56,
+      "fp": 6,
+      "fn": 19,
+      "tn": 56881
+    },
+    {
+      "threshold": 0.65,
+      "precision": 0.9032,
+      "recall": 0.7467,
+      "flaggedRate": 0.001088,
+      "tp": 56,
+      "fp": 6,
+      "fn": 19,
+      "tn": 56881
+    },
+    {
+      "threshold": 0.66,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.67,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.68,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.69,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.7,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.71,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.72,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.73,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.74,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.75,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.76,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.77,
+      "precision": 0.918,
+      "recall": 0.7467,
+      "flaggedRate": 0.001071,
+      "tp": 56,
+      "fp": 5,
+      "fn": 19,
+      "tn": 56882
+    },
+    {
+      "threshold": 0.78,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.79,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.8,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.81,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.82,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.83,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.84,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.85,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.86,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.87,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.88,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.89,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.9,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.91,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.92,
+      "precision": 0.9322,
+      "recall": 0.7333,
+      "flaggedRate": 0.001036,
+      "tp": 55,
+      "fp": 4,
+      "fn": 20,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.93,
+      "precision": 0.931,
+      "recall": 0.72,
+      "flaggedRate": 0.001018,
+      "tp": 54,
+      "fp": 4,
+      "fn": 21,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.94,
+      "precision": 0.9298,
+      "recall": 0.7067,
+      "flaggedRate": 0.001001,
+      "tp": 53,
+      "fp": 4,
+      "fn": 22,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.95,
+      "precision": 0.9298,
+      "recall": 0.7067,
+      "flaggedRate": 0.001001,
+      "tp": 53,
+      "fp": 4,
+      "fn": 22,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.96,
+      "precision": 0.9298,
+      "recall": 0.7067,
+      "flaggedRate": 0.001001,
+      "tp": 53,
+      "fp": 4,
+      "fn": 22,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.97,
+      "precision": 0.9298,
+      "recall": 0.7067,
+      "flaggedRate": 0.001001,
+      "tp": 53,
+      "fp": 4,
+      "fn": 22,
+      "tn": 56883
+    },
+    {
+      "threshold": 0.98,
+      "precision": 0.9464,
+      "recall": 0.7067,
+      "flaggedRate": 0.000983,
+      "tp": 53,
+      "fp": 3,
+      "fn": 22,
+      "tn": 56884
+    },
+    {
+      "threshold": 0.99,
+      "precision": 0.9808,
+      "recall": 0.68,
+      "flaggedRate": 0.000913,
+      "tp": 51,
+      "fp": 1,
+      "fn": 24,
+      "tn": 56886
+    },
+    {
+      "threshold": 1.0,
+      "precision": 1.0,
+      "recall": 0.0,
+      "flaggedRate": 0.0,
+      "tp": 0,
+      "fp": 0,
+      "fn": 75,
+      "tn": 56887
+    }
+  ]
+}

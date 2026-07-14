@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Spec is authoritative: `docs/superpowers/specs/2026-07-13-sentinel-fraud-platform-design.md`. Re-read the relevant spec section before each task.
-- **Feature order is canonical everywhere** (TS, Python, JSON, DB): `["Time","V1","V2",...,"V28","Amount"]` (30 features, exactly this order).
+- **Feature order is canonical everywhere** (TS, Python, JSON, DB): `["V1","V2",...,"V28","Amount"]` — **29 features**, exactly this order. `Time` is NOT a feature (it cannot generalize across a chronological split; see spec §4 and `ml/common.py`). Anywhere this plan says 30, read 29.
 - **Money is stored as integer cents** (`amount_cents`); formatted only at display time.
 - Model quality gate: **PR-AUC (average precision) ≥ 0.80 on the future holdout** — the pipeline test fails otherwise.
 - ONNX↔native parity: max abs probability diff ≤ 1e-5 on 1,000 sampled rows.

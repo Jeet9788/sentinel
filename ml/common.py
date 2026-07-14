@@ -4,6 +4,13 @@ FEATURE_NAMES is the single source of truth for feature ordering. The same order
 is baked into the ONNX input tensor, the `features` column in Postgres, and the
 TypeScript client. Reordering it anywhere without reordering it everywhere would
 silently feed the model garbage, so it is asserted in the tests.
+
+`Time` is deliberately NOT a model feature. It measures seconds elapsed since the
+dataset's first transaction, so under a chronological split every test row's Time
+is larger than every training row's — the two ranges are disjoint by construction.
+A tree can only learn thresholds inside the training range, so at serving time
+every row falls off the same end of every Time split: no signal, only noise.
+We use Time for exactly one thing, which is to perform the split itself.
 """
 
 from __future__ import annotations
@@ -12,7 +19,9 @@ import pathlib
 
 import pandas as pd
 
-FEATURE_NAMES: list[str] = ["Time"] + [f"V{i}" for i in range(1, 29)] + ["Amount"]
+TIME_COL = "Time"
+FEATURE_NAMES: list[str] = [f"V{i}" for i in range(1, 29)] + ["Amount"]
+N_FEATURES = len(FEATURE_NAMES)  # 29
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "ml" / "data"
@@ -27,15 +36,16 @@ TRAIN_FRACTION = 0.8
 
 
 def load_raw() -> pd.DataFrame:
-    """Load the validated raw dataset with columns FEATURE_NAMES + ['Class']."""
+    """Load the validated raw dataset: ['Time'] + FEATURE_NAMES + ['Class']."""
     if not RAW_CSV.exists():
         raise FileNotFoundError(f"{RAW_CSV} missing — run `python ml/download.py` first")
     df = pd.read_csv(RAW_CSV)
-    missing = [c for c in FEATURE_NAMES + ["Class"] if c not in df.columns]
+    columns = [TIME_COL] + FEATURE_NAMES + ["Class"]
+    missing = [c for c in columns if c not in df.columns]
     if missing:
         raise ValueError(f"dataset is missing expected columns: {missing}")
-    df = df[FEATURE_NAMES + ["Class"]]
-    df[FEATURE_NAMES] = df[FEATURE_NAMES].astype("float64")
+    df = df[columns]
+    df[[TIME_COL] + FEATURE_NAMES] = df[[TIME_COL] + FEATURE_NAMES].astype("float64")
     df["Class"] = df["Class"].astype("int64")
     return df
 
