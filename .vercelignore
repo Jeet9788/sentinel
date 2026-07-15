@@ -22,3 +22,8 @@ ml/requirements.txt
 
 # Docs and specs are not part of the runtime
 docs/
+
+# Agent tooling (broken symlinks on Vercel; not part of the app)
+.claude/
+.agents/
+skills-lock.json
