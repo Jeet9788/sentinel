@@ -1,5 +1,8 @@
 # Sentinel — real-time payment fraud detection
 
+**Live demo → [sentinel-beryl-psi.vercel.app](https://sentinel-beryl-psi.vercel.app)**
+· Click **Inject fraud burst** and watch the system catch it.
+
 Sentinel is the operational system a payments company runs around a fraud model:
 every transaction is scored on arrival, the confident cases are auto-approved or
 auto-blocked, and the uncertain ones are routed to a human analyst with an
