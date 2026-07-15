@@ -16,11 +16,18 @@ import time
 
 import numpy as np
 import onnxruntime as ort
-from fastapi import FastAPI, HTTPException
+from fastapi import APIRouter, FastAPI, HTTPException
 from pydantic import BaseModel
 
-from api.explain import MODEL_VERSION, N_FEATURES, top_factors
-from api.onnx_io import probability_of_fraud
+# Works both as a package (pytest: `from api.index import app`, uvicorn:
+# `api.index:app`) and as a bare module (Vercel runs api/index.py with api/ on
+# the path). The two import roots are the only difference between the environments.
+try:
+    from api.explain import MODEL_VERSION, N_FEATURES, top_factors
+    from api.onnx_io import probability_of_fraud
+except ImportError:  # pragma: no cover - exercised only in the Vercel runtime
+    from explain import MODEL_VERSION, N_FEATURES, top_factors
+    from onnx_io import probability_of_fraud
 
 MODEL_PATH = pathlib.Path(__file__).parent / "_model" / "model.onnx"
 
@@ -38,14 +45,17 @@ class ScoreRequest(BaseModel):
     features: list[float]
 
 
-@app.get("/api/py/health")
+router = APIRouter()
+
+
+@router.get("/health")
 def health() -> dict:
     if session is None:
         raise HTTPException(status_code=503, detail=f"model unavailable: {load_error}")
     return {"status": "ok", "modelVersion": MODEL_VERSION, "features": N_FEATURES}
 
 
-@app.post("/api/py/score")
+@router.post("/score")
 def score(request: ScoreRequest) -> dict:
     if session is None:
         raise HTTPException(status_code=503, detail=f"model unavailable: {load_error}")
@@ -68,3 +78,10 @@ def score(request: ScoreRequest) -> dict:
         "topFactors": top_factors(session, features, probability),
         "latencyMs": round((time.perf_counter() - started) * 1000, 2),
     }
+
+
+# The routes are mounted under /api/py (how the app calls them) and also at the
+# root, so the function answers whether Vercel delivers the request with the
+# original /api/py/* path or strips the prefix when routing to the function.
+app.include_router(router, prefix="/api/py")
+app.include_router(router)

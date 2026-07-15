@@ -39,12 +39,26 @@ function createDb() {
 // session would leak a new PGlite instance (and file lock) per edit.
 const globalForDb = globalThis as unknown as { sentinelDb?: ReturnType<typeof createDb> };
 
-/**
- * The two drivers expose the same Drizzle surface, so consumers are written
- * against one type. The cast picks the Neon type as the canonical one; it does
- * not change what runs.
- */
-export const db = (globalForDb.sentinelDb ??= createDb()) as NeonDatabase<typeof schema>;
+function getDb() {
+  return (globalForDb.sentinelDb ??= createDb());
+}
 
-export type Db = typeof db;
+/**
+ * The database handle, created lazily on first use.
+ *
+ * Lazy matters at build time: `next build` imports every route module to collect
+ * metadata, and an eager connection would boot PGlite inside a build worker that
+ * has no database — which aborts. Deferring creation until a query actually runs
+ * means importing this module is free.
+ *
+ * The two drivers expose the same Drizzle surface, so consumers are written
+ * against one type; the proxy forwards every access to the real instance.
+ */
+export const db = new Proxy({} as NeonDatabase<typeof schema>, {
+  get(_target, prop, receiver) {
+    return Reflect.get(getDb(), prop, receiver);
+  },
+});
+
+export type Db = NeonDatabase<typeof schema>;
 export { schema };

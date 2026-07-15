@@ -21,7 +21,10 @@ import pathlib
 
 import numpy as np
 
-from api.onnx_io import probability_of_fraud
+try:
+    from api.onnx_io import probability_of_fraud
+except ImportError:  # pragma: no cover - exercised only in the Vercel runtime
+    from onnx_io import probability_of_fraud
 
 MODEL_DIR = pathlib.Path(__file__).parent / "_model"
 TOP_N = 5
