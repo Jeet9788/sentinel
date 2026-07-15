@@ -1,0 +1,24 @@
+# The raw dataset (~300 MB) is only needed to train the model locally. The
+# trained artifacts in models/v1 and api/_model are what deploy.
+ml/data/
+
+# Local-only PGlite database
+.data/
+
+# Build output and test artifacts (Vercel rebuilds; these are regenerated)
+.next/
+test-results/
+playwright-report/
+
+# The Python training stack and its tests never run on Vercel — only the
+# serving function in api/ does.
+ml/download.py
+ml/train.py
+ml/export.py
+ml/make_replay.py
+ml/common.py
+ml/tests/
+ml/requirements.txt
+
+# Docs and specs are not part of the runtime
+docs/

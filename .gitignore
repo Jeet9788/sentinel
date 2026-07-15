@@ -55,3 +55,6 @@ ml/data/
 # playwright
 /test-results/
 /playwright-report/
+
+.vercel
+.env*
