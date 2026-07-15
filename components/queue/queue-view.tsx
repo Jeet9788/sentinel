@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { CaseDrawer } from "@/components/queue/case-drawer";
-import { DecisionBadge } from "@/components/decision-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fmtMoney, fmtScore, timeAgo } from "@/lib/format";
 import type { CaseView } from "@/lib/views";
@@ -27,10 +26,25 @@ export function QueueView({ tLow, tHigh }: { tLow: number; tHigh: number }) {
   }, []);
 
   useEffect(() => {
-    load();
-    const timer = setInterval(load, POLL_MS);
-    return () => clearInterval(timer);
-  }, [load]);
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const response = await fetch("/api/cases?status=open", { cache: "no-store" });
+        if (!response.ok) throw new Error(String(response.status));
+        const body = (await response.json()) as { items: CaseView[] };
+        if (!cancelled) setCases(body.items);
+      } catch {
+        if (!cancelled) setCases((current) => current ?? []);
+      }
+    };
+
+    poll();
+    const timer = setInterval(poll, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, []);
 
   // Optimistic removal: a resolved case leaves the list immediately. An empty id
   // is the drawer's rollback signal — refetch and trust the server.
