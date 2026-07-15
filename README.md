@@ -1,6 +1,6 @@
 # Sentinel — real-time payment fraud detection
 
-**Live demo → [sentinel-beryl-psi.vercel.app](https://sentinel-beryl-psi.vercel.app)**
+**Live demo → [sentinel-fraud-console.vercel.app](https://sentinel-fraud-console.vercel.app)**
 · Click **Inject fraud burst** and watch the system catch it.
 
 Sentinel is the operational system a payments company runs around a fraud model:
@@ -16,7 +16,7 @@ chat API.
 
 ## Using the demo
 
-Open the [live demo](https://sentinel-beryl-psi.vercel.app) and walk the four pages.
+Open the [live demo](https://sentinel-fraud-console.vercel.app) and walk the four pages.
 The **Inject fraud burst** button in the top bar pushes through a batch of
 transactions that is guaranteed to contain real fraud, so you can watch the
 system catch it on demand.
