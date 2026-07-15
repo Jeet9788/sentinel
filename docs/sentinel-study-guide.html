@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Sentinel — Interview Study Guide</title>
+<style>
+  :root {
+    --ink: #14181f;
+    --muted: #5b6472;
+    --line: #dfe3ea;
+    --accent: #2f6df6;
+    --approved: #1f8f63;
+    --review: #b5790a;
+    --blocked: #d23b3b;
+    --code-bg: #f5f7fa;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    line-height: 1.55;
+    font-size: 10.5pt;
+    margin: 0;
+  }
+  @page { size: A4; margin: 18mm 16mm; }
+
+  h1, h2, h3, h4 { font-family: "Segoe UI Semibold", "Segoe UI", Arial, sans-serif; line-height: 1.25; }
+  h2 {
+    font-size: 17pt; margin: 0 0 4px; padding-top: 6px;
+    border-bottom: 2px solid var(--ink); padding-bottom: 6px;
+  }
+  h3 { font-size: 12.5pt; margin: 18px 0 6px; color: #1a2230; }
+  h4 { font-size: 10.8pt; margin: 12px 0 4px; }
+  p { margin: 7px 0; }
+  ul, ol { margin: 6px 0 10px; padding-left: 20px; }
+  li { margin: 3px 0; }
+  a { color: var(--accent); text-decoration: none; }
+  strong { color: #0d1017; }
+  code {
+    font-family: "Cascadia Code", "Consolas", monospace;
+    background: var(--code-bg); padding: 1px 4px; border-radius: 3px; font-size: 9pt;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px;
+    padding: 10px 12px; font-family: "Cascadia Code","Consolas",monospace;
+    font-size: 8.6pt; line-height: 1.45; overflow-x: auto; white-space: pre-wrap;
+  }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 9.3pt; }
+  th, td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: #eef1f6; font-family: "Segoe UI Semibold", Arial; }
+  .muted { color: var(--muted); }
+  .tag { display: inline-block; font-size: 8pt; font-weight: 600; padding: 1px 7px; border-radius: 10px; }
+  .t-app { background: #e2f2ea; color: var(--approved); }
+  .t-rev { background: #f6ecd4; color: var(--review); }
+  .t-blk { background: #f8e0e0; color: var(--blocked); }
+
+  .cover { height: 258mm; display: flex; flex-direction: column; justify-content: center; page-break-after: always; }
+  .cover .kicker { color: var(--accent); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 10pt; }
+  .cover h1 { font-size: 40pt; margin: 6px 0 2px; letter-spacing: -1px; }
+  .cover .sub { font-size: 15pt; color: var(--muted); margin-bottom: 30px; }
+  .cover .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; margin-top: 10px; max-width: 460px; }
+  .cover .facts div { border-top: 2px solid var(--ink); padding-top: 6px; }
+  .cover .facts .n { font-size: 20pt; font-weight: 700; }
+  .cover .facts .l { font-size: 9pt; color: var(--muted); }
+
+  .callout { border-left: 4px solid var(--accent); background: #f2f6ff; padding: 8px 14px; margin: 12px 0; border-radius: 0 6px 6px 0; }
+  .callout.win { border-color: var(--approved); background: #f0f8f4; }
+  .callout.warn { border-color: var(--review); background: #fbf6ea; }
+  .qa { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: #fbfcfe; }
+  .qa .q { font-weight: 700; color: #0d1017; }
+  .qa .a { margin-top: 4px; }
+  .why { background: #fafbfd; }
+  .why td:first-child { font-weight: 600; width: 24%; }
+  section { page-break-before: always; }
+  section:first-of-type { page-break-before: avoid; }
+  .toc ol { counter-reset: none; }
+  .toc a { color: var(--ink); }
+  .toc .num { color: var(--accent); font-weight: 700; display: inline-block; width: 22px; }
+  .avoid-break { page-break-inside: avoid; }
+  .footer-note { color: var(--muted); font-size: 8.5pt; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="kicker">Interview Study Guide</div>
+  <h1>Sentinel</h1>
+  <div class="sub">A real-time payment fraud detection platform — how it works, and why every choice was made.</div>
+  <p class="muted" style="max-width:520px">This document is written to be read the night before an interview. It explains the whole system from the data up, and — more importantly — the reasoning behind each decision, phrased the way you'd defend it out loud.</p>
+  <div class="facts">
+    <div><div class="n">0.802</div><div class="l">PR-AUC on the future holdout</div></div>
+    <div><div class="n">~2 ms</div><div class="l">per-transaction scoring latency</div></div>
+    <div><div class="n">0.17%</div><div class="l">fraud rate — the core difficulty</div></div>
+    <div><div class="n">59</div><div class="l">automated tests (ML + app + e2e)</div></div>
+  </div>
+  <p class="footer-note" style="margin-top:34px">Live: sentinel-beryl-psi.vercel.app · Stack: XGBoost → ONNX · Next.js · FastAPI · Neon Postgres · Vercel</p>
+</div>
+
+<!-- TOC -->
+<section class="toc">
+  <h2>Contents</h2>
+  <ol style="list-style:none; padding-left:0; font-size:11pt; line-height:2">
+    <li><span class="num">1</span> The 90-second pitch (say this first)</li>
+    <li><span class="num">2</span> The problem, and why it's hard</li>
+    <li><span class="num">3</span> The data</li>
+    <li><span class="num">4</span> The model — every decision explained</li>
+    <li><span class="num">5</span> Turning a probability into a decision</li>
+    <li><span class="num">6</span> Explainability (two kinds, and why)</li>
+    <li><span class="num">7</span> Serving: why ONNX, and the train/serve contract</li>
+    <li><span class="num">8</span> System architecture &amp; the full stack</li>
+    <li><span class="num">9</span> Deployment, and the bugs it exposed</li>
+    <li><span class="num">10</span> "Why X over Y" — master decision table</li>
+    <li><span class="num">11</span> Anticipated interview questions</li>
+    <li><span class="num">12</span> Honest weaknesses &amp; what's next</li>
+    <li><span class="num">13</span> One-page cheat sheet</li>
+  </ol>
+</section>
+
+<!-- 1 -->
+<section>
+  <h2>1 · The 90-second pitch</h2>
+  <p>Open with what it <em>is</em>, then what makes it hard, then the outcome:</p>
+  <div class="callout">
+    <p>"Sentinel is the operational system a payments company runs around a fraud model — think Stripe Radar, self-built. Every card transaction is scored the instant it arrives; the model auto-approves the ones it's confident are fine, auto-blocks the ones it's confident are fraud, and sends the uncertain middle to a human analyst with an explanation of why it was flagged."</p>
+    <p>"The hard part is that fraud is only 0.17% of transactions, so accuracy is useless — a model that flags nothing is 99.83% accurate and catches zero fraud. I built the whole system around that reality: a properly evaluated gradient-boosted model at PR-AUC 0.80, served as ONNX in about two milliseconds, with a human-in-the-loop review queue, tunable decision thresholds, and per-transaction explanations — deployed full-stack on Vercel with a Postgres database."</p>
+  </div>
+  <p>That paragraph alone signals: you understand the domain, you know why the naive metric fails, you built a <em>system</em> (not a notebook), and you shipped it. Everything below is you being able to go three levels deeper on any sentence in it.</p>
+
+  <h3>What makes it a "senior-looking" project, not a tutorial</h3>
+  <ul>
+    <li>A real data pipeline with a <strong>leakage guard</strong> and a <strong>quality gate</strong> (the build fails if the model regresses).</li>
+    <li>A clean split between <strong>training</strong> (heavy, offline) and <strong>serving</strong> (tiny, fast) — the way production ML actually works.</li>
+    <li>Decisions framed as <strong>business trade-offs</strong>, not accuracy numbers.</li>
+    <li>Deliberate <strong>failure handling</strong> (what happens when the model is down?) and an <strong>audit trail</strong>.</li>
+    <li>It's <strong>deployed and public</strong>, with the demo showing genuine out-of-sample predictions.</li>
+  </ul>
+</section>
+
+<!-- 2 -->
+<section>
+  <h2>2 · The problem, and why it's hard</h2>
+  <p>Card fraud detection is a <strong>binary classification</strong> problem with three properties that make it unlike a textbook classifier:</p>
+  <ol>
+    <li><strong>Extreme class imbalance.</strong> Fraud is ~0.17% of transactions. The model sees ~580 legitimate transactions for every fraudulent one.</li>
+    <li><strong>Asymmetric, conflicting error costs.</strong> Missing fraud costs money (a chargeback). But blocking a legitimate customer costs a sale <em>and</em> trust. You cannot minimize both at once — you trade them off.</li>
+    <li><strong>It's adversarial and time-ordered.</strong> Fraud patterns drift; you are always predicting the future from the past.</li>
+  </ol>
+  <p>Every design decision in the project traces back to one of these three. When an interviewer asks "why did you do X," the strongest answer usually starts with "because fraud is 0.17% of traffic…" or "because the two errors have different costs…".</p>
+
+  <div class="callout win">
+    <strong>The framing that lands:</strong> "A fraud model doesn't make decisions — it produces a probability. Turning that probability into approve / block / review is a business decision about the relative cost of two mistakes. I made that boundary explicit and tunable, instead of hard-coding a 0.5 cutoff."
+  </div>
+</section>
+
+<!-- 3 -->
+<section>
+  <h2>3 · The data</h2>
+  <p>The <strong>ULB credit-card fraud dataset</strong> (OpenML #1597): 284,807 real anonymized European card transactions from 2013, of which <strong>492 are fraud (0.173%)</strong>.</p>
+  <table class="avoid-break">
+    <tr><th>Column</th><th>What it is</th><th>Used as a feature?</th></tr>
+    <tr><td><code>Time</code></td><td>Seconds elapsed since the first transaction in the dataset</td><td><strong>No</strong> — used only to split the data (see §4)</td></tr>
+    <tr><td><code>V1</code>–<code>V28</code></td><td>PCA components — the real fields, transformed to anonymize them for privacy</td><td>Yes (28 features)</td></tr>
+    <tr><td><code>Amount</code></td><td>Transaction amount (one of only two un-transformed fields)</td><td>Yes (1 feature)</td></tr>
+    <tr><td><code>Class</code></td><td>1 = fraud, 0 = legitimate</td><td>Target label</td></tr>
+  </table>
+  <p><strong>Final feature vector: 29 dimensions</strong> (V1–V28 + Amount).</p>
+
+  <div class="callout warn">
+    <strong>The honesty point (bring this up yourself — it shows integrity):</strong> because V1–V28 are anonymized PCA components, they have no human-readable meaning. In the UI the merchant names, cities, and card numbers are <em>synthetic presentation metadata</em> — but the <em>scores</em> are computed from the real feature vectors. Interviewers know this dataset; volunteering the caveat reads as rigor, not weakness.
+  </div>
+
+  <h3>The demo's replay pool</h3>
+  <p>The live simulator replays transactions drawn <strong>only from the held-out test set</strong> — data the model never trained on. This means every score shown on the live dashboard is a genuine out-of-sample prediction, not a memorized training row. Small detail, but it's the difference between an honest demo and a rigged one.</p>
+</section>
+
+<!-- 4 -->
+<section>
+  <h2>4 · The model — every decision explained</h2>
+  <p>A single <strong>XGBoost</strong> (gradient-boosted trees) binary classifier. Final hyperparameters: depth 8, learning rate 0.05, 232 trees, <code>scale_pos_weight ≈ 545</code>, chosen by a small grid search against a chronological validation slice.</p>
+
+  <h3>4.1 — Why gradient-boosted trees (not logistic regression, not a neural net)</h3>
+  <table class="why">
+    <tr><td>vs. Logistic regression</td><td>The PCA features have non-linear interactions that a linear model can't capture. GBTs find them automatically. (LR is a fine <em>baseline</em> to mention.)</td></tr>
+    <tr><td>vs. Deep neural net</td><td>On ~285k rows of tabular data, gradient-boosted trees are the known state of the art — they train in seconds, need no GPU, and are far easier to explain. A neural net would be slower, hungrier for data, and harder to defend. "Right tool for tabular data" is the whole answer.</td></tr>
+    <tr><td>vs. Random forest</td><td>Boosting (sequential, error-correcting) generally beats bagging (parallel, variance-reducing) on this kind of problem, and XGBoost has first-class support for the imbalance knob (<code>scale_pos_weight</code>) and the PR-AUC eval metric.</td></tr>
+  </table>
+
+  <h3>4.2 — Why PR-AUC is the headline metric, not accuracy or ROC-AUC</h3>
+  <p>This is <strong>the</strong> most important talking point in the project. Rehearse it.</p>
+  <ul>
+    <li><strong>Accuracy is a trap.</strong> Predict "never fraud" and you're 99.83% accurate and worthless. Accuracy is dominated by the 99.83% of easy negatives.</li>
+    <li><strong>ROC-AUC is flattered too.</strong> ROC-AUC was 0.988 — impressive-looking, but it's inflated by the enormous true-negative mass. The false-positive rate barely moves because the denominator (all legit transactions) is huge.</li>
+    <li><strong>Precision–Recall only looks at the rare class.</strong> Precision = "of what we flagged, how much was really fraud." Recall = "of all fraud, how much did we catch." Neither is diluted by the easy negatives. <strong>PR-AUC (0.802)</strong> summarizes that curve and is the honest number.</li>
+  </ul>
+  <div class="callout"><strong>Soundbite:</strong> "ROC-AUC asks how well you rank a random fraud above a random legit transaction — easy when negatives are abundant. PR-AUC asks whether the transactions you actually flag are worth an analyst's time. For a 0.17% problem, only the second question matters."</div>
+
+  <h3>4.3 — Why a time-based split (and why it matters more than it sounds)</h3>
+  <p>I split train/test <strong>chronologically</strong> on <code>Time</code>: the model trains on the earlier 80% and is evaluated on the later 20% (56,962 transactions, 75 frauds).</p>
+  <p><strong>Why not a random split?</strong> A random split lets the model train on transactions that happened <em>after</em> ones it's tested on — a subtle <strong>data leak</strong> that inflates every metric, because in the real world you never get to peek at the future. Fraud is deployed against the future, so it must be measured against the future. Reporting a chronological-split number is both more honest and lower (and being able to explain that is the point).</p>
+
+  <h3>4.4 — Why <code>Time</code> is not a feature (a real bug I caught)</h3>
+  <p>My first model included <code>Time</code> and scored PR-AUC 0.7995. I realized the problem: <code>Time</code> is "seconds since the dataset started," so under a chronological split <strong>every test row's Time is larger than every training row's</strong> — the ranges are disjoint by construction. A tree can only split on thresholds it saw in training, so at serving time every transaction falls off the same end of every Time split. The feature carries <em>zero</em> generalizable signal — only noise. Dropping it raised PR-AUC to <strong>0.8019</strong>.</p>
+  <div class="callout win"><strong>This is a gift of an interview story.</strong> It shows you reason about <em>why</em> a feature helps, not just whether a number went up. "I removed a feature and the model got better, and I can tell you exactly why" is a senior-level answer.</div>
+
+  <h3>4.5 — Why cost-reweighting, not resampling (SMOTE/undersampling)</h3>
+  <p>The imbalance is handled with XGBoost's <code>scale_pos_weight ≈ 545</code> (the ratio of negatives to positives), which tells the model to treat each fraud as ~545× more important during training.</p>
+  <table class="why">
+    <tr><td>vs. Undersampling</td><td>Throwing away 99% of the legitimate data to balance the classes discards real signal about what "normal" looks like.</td></tr>
+    <tr><td>vs. SMOTE (synthetic oversampling)</td><td>Inventing synthetic fraud in PCA space risks fabricating patterns that don't exist. Cost-reweighting keeps the model on the <em>real</em> data distribution and just changes how mistakes are penalized.</td></tr>
+  </table>
+
+  <h3>4.6 — The quality gate</h3>
+  <p>The training pipeline is not a notebook — it has tests that <strong>fail the build</strong> if:</p>
+  <ul>
+    <li>a train/test time leak is detected (<code>max(train.Time) &lt; min(test.Time)</code> must hold),</li>
+    <li>holdout PR-AUC drops below 0.80,</li>
+    <li>the exported ONNX model's predictions disagree with the trained model (parity within 1e-5; measured drift was 1.2e-7).</li>
+  </ul>
+  <p>This is the "MLOps maturity" signal: the model can't silently regress without a red build.</p>
+</section>
+
+<!-- 5 -->
+<section>
+  <h2>5 · Turning a probability into a decision</h2>
+  <p>The model outputs a probability in [0,1]. A <strong>decision engine</strong> maps it to an action using two thresholds:</p>
+  <table class="avoid-break">
+    <tr><th>Score range</th><th>Action</th><th>Rationale</th></tr>
+    <tr><td>below <code>t_low</code> (0.01)</td><td><span class="tag t-app">APPROVED</span></td><td>Confident it's fine — no human needed.</td></tr>
+    <tr><td><code>t_low</code> ≤ score &lt; <code>t_high</code></td><td><span class="tag t-rev">REVIEW</span></td><td>Uncertain — send to a human analyst.</td></tr>
+    <tr><td>≥ <code>t_high</code> (0.99)</td><td><span class="tag t-blk">BLOCKED</span></td><td>Confident it's fraud — block automatically.</td></tr>
+  </table>
+
+  <h3>Why two thresholds instead of one 0.5 cutoff</h3>
+  <p>A single 0.5 cutoff forces a binary approve/block with no room for "I'm not sure." Two thresholds create a <strong>middle band for human judgment</strong> — the model handles the easy 99%+, humans handle the ambiguous sliver. That's the human-in-the-loop design.</p>
+
+  <h3>Why the thresholds are tunable in the UI (the best "systems thinking" point)</h3>
+  <p>Where the thresholds sit is <strong>not a machine-learning decision — it's a business decision.</strong> Lowering <code>t_high</code> blocks more fraud but declines more real customers. The right setting depends on the company's fraud-loss vs. customer-friction trade-off, which changes over time. So I made them a live control on the Model page, with a preview computed from the holdout table.</p>
+
+  <h3>How the defaults were chosen (not arbitrary)</h3>
+  <p>The defaults come from <strong>operating constraints</strong>, not a round number:</p>
+  <ul>
+    <li><strong><code>t_low</code></strong> = the lowest threshold whose review volume stays within analyst capacity (≤0.5% of traffic).</li>
+    <li><strong><code>t_high</code></strong> = the lowest threshold where auto-blocking is ≥95% precise (so we rarely decline a real customer).</li>
+  </ul>
+  <div class="callout warn"><strong>A subtle bug I fixed here:</strong> my first rule was "set <code>t_low</code> so recall ≥ 90%." But the model's <em>ceiling</em> on this holdout is ~85% recall (some frauds simply score near zero). The rule was unsatisfiable and silently collapsed to <code>t_low = 0</code> — which would route <em>all</em> traffic to human review. I caught it, understood it was a real ceiling, and replaced the rule with the capacity/precision constraints above.</div>
+
+  <h3>The operating points (memorize the shape, not the digits)</h3>
+  <table class="avoid-break">
+    <tr><th>Threshold</th><th>Precision</th><th>Recall</th><th>Fraud caught (of 75)</th><th>False positives</th></tr>
+    <tr><td>0.01 (approve line)</td><td>0.34</td><td>0.83</td><td>62</td><td>121</td></tr>
+    <tr><td>0.50</td><td>0.89</td><td>0.75</td><td>56</td><td>7</td></tr>
+    <tr><td>0.99 (block line)</td><td>0.98</td><td>0.68</td><td>51</td><td>1</td></tr>
+  </table>
+  <p>The story these numbers tell: as you raise the bar, precision climbs and recall falls — the fundamental trade-off, visible in three rows. At the block line, the model auto-blocks 51 frauds against a single false positive.</p>
+</section>
+
+<!-- 6 -->
+<section>
+  <h2>6 · Explainability — two kinds, and why both</h2>
+  <p>An analyst can't act on "score: 0.94." They need <em>why</em>. The project has two explanation systems, deliberately different, each labeled for what it is.</p>
+
+  <h3>Global — exact SHAP (on the Model page)</h3>
+  <p>Computed offline during training over the holdout: the mean absolute SHAP contribution of each feature, i.e. which features drive the model <em>overall</em>. Top features: <strong>V14, V4, V12, V11, V10</strong> — and V14 dominating is a known signature of this dataset, which is a nice external sanity check.</p>
+
+  <h3>Local — fast sensitivity analysis (in the review drawer)</h3>
+  <p>Per transaction, at serving time: for each feature, re-score the transaction with that feature "neutralized" to its training median — "what would the score have been if this feature had been unremarkable?" The drop is that feature's impact. All 29 neutralizations are batched into <strong>one</strong> extra model call, so an explanation costs one inference, not 29.</p>
+
+  <h3>Why not use SHAP for the per-transaction explanations too?</h3>
+  <p>Exact SHAP is too slow for the request path. So: exact-but-slow SHAP offline for the global view, fast-but-approximate sensitivity online for the per-transaction view. I label each honestly rather than pretending the fast one is exact — which is itself a point of rigor.</p>
+</section>
+
+<!-- 7 -->
+<section>
+  <h2>7 · Serving — why ONNX, and the train/serve contract</h2>
+  <p>The model is <strong>trained</strong> locally with the full heavy stack (XGBoost, scikit-learn, SHAP, pandas) and <strong>exported to ONNX</strong> — a 752 KB artifact that the serving function runs with only <code>onnxruntime</code> + <code>numpy</code>.</p>
+
+  <h3>Why this split matters</h3>
+  <table class="why">
+    <tr><td>Bundle size</td><td>Shipping XGBoost + SHAP + pandas into a serverless function is hundreds of MB and slow to cold-start. ONNX + onnxruntime is tiny and boots fast.</td></tr>
+    <tr><td>Clean separation</td><td>Training is a heavy, occasional, offline job. Serving is a light, constant, online job. Different lifecycles, different dependencies — the industry-standard shape.</td></tr>
+    <tr><td>Portability</td><td>ONNX is a framework-neutral format. The serving layer doesn't care that the model came from XGBoost.</td></tr>
+  </table>
+
+  <div class="callout win"><strong>The safety net I'm proud of:</strong> the export step refuses to write the ONNX file unless its predictions match the native XGBoost model within 1e-5 on 1,000 samples (measured drift: 1.2e-7). This makes "the thing I serve" provably "the thing I evaluated" — otherwise a silent conversion bug could ship a subtly different model than the metrics describe.</div>
+
+  <h3>The fail-safe (a favorite "what if it breaks" answer)</h3>
+  <p>If the scorer is unreachable, the transaction is <strong>still recorded and routed to a human</strong>, flagged with <code>scoring_error</code>. The policy is explicit: <strong>never silently approve, never auto-block without a score.</strong> An outage degrades to "everything gets human review," never to "everything sails through."</p>
+</section>
+
+<!-- 8 -->
+<section>
+  <h2>8 · System architecture &amp; the full stack</h2>
+  <pre>┌───────────────────────── Vercel (one deployment) ─────────────────────────┐
+│  Next.js (App Router, TypeScript, Tailwind, Recharts)                      │
+│    Pages:  Overview · Review queue · Transactions · Model                  │
+│    Node API routes:  ingest · feed · stats · cases · settings · simulate   │
+│                         │  /api/py/*  (platform rewrite)                    │
+│                         ▼                                                   │
+│  Python function (FastAPI + onnxruntime)                                   │
+│    POST /api/py/score  →  { probability, topFactors[] }                    │
+└──────────────────────────────┬─────────────────────────────────────────────┘
+                               ▼
+                     Postgres  (Neon in prod · PGlite locally)</pre>
+
+  <h3>The ingest path — the heart of the write side</h3>
+  <p>Every transaction goes through one function: <strong>score → decide → persist</strong>, and the transaction plus (if flagged) its review case are written in a <strong>single database transaction</strong> so you never get an orphaned case. Two guarantees are enforced by tests:</p>
+  <ul>
+    <li><strong>Idempotency:</strong> ingest is keyed on a client-supplied UUID, so a retry (or a double-fired simulator tick) can't duplicate a transaction, re-open a resolved case, or burn a second inference.</li>
+    <li><strong>Atomicity:</strong> transaction + case succeed together or not at all.</li>
+  </ul>
+
+  <h3>Notable engineering decisions</h3>
+  <table class="why">
+    <tr><td>Presence-driven simulator</td><td>Vercel's free tier runs cron jobs only once a day, so a cron can't power a live feed. Instead the stream advances while someone is watching, throttled server-side (an atomic conditional <code>UPDATE</code>) so ten open tabs still produce one batch per interval — not ten. Framed as a feature: don't simulate traffic nobody is watching.</td></tr>
+    <tr><td>Dual database driver</td><td>One code path, two drivers chosen by whether <code>DATABASE_URL</code> is set: PGlite (in-process WASM Postgres) locally so <code>git clone &amp;&amp; run</code> needs no database server or credentials; Neon (serverless Postgres) in production. Same schema, same migrations, same queries.</td></tr>
+    <tr><td>Feed cursor on a sequence, not time</td><td>Two transactions can share a timestamp; polling on time would skip or replay rows. A monotonic <code>seq</code> makes "everything after N" exact.</td></tr>
+    <tr><td>Case-resolution race protection</td><td>Resolving a case is a conditional update ("only if still open"), so two analysts racing on the same case get a 409 instead of silently overwriting each other.</td></tr>
+    <tr><td>Raw features never leave the server</td><td>The 29-dim vector is stripped from every API response — it's meaningless to a human and pure payload weight.</td></tr>
+  </table>
+
+  <h3>Testing (the "I verify my work" signal)</h3>
+  <p><strong>59 automated tests</strong> across three layers: 16 Python (leakage guard, PR-AUC floor, ONNX parity, scorer behavior), 39 TypeScript (decision engine boundaries, fail-safe ingest, idempotency, API routes with a real in-memory Postgres), and 4 Playwright end-to-end tests that drive the real app + scorer + database in a browser.</p>
+</section>
+
+<!-- 9 -->
+<section>
+  <h2>9 · Deployment, and the bugs it exposed</h2>
+  <p>Deployed to Vercel as a single project: the Next.js app and the Python scorer ship together, with Neon Postgres provisioned through Vercel's marketplace. Three problems surfaced only in production — and being able to tell these stories is worth as much as the clean parts.</p>
+
+  <div class="qa">
+    <div class="q">Bug 1 — The build booted a database it didn't need.</div>
+    <div class="a"><code>next build</code> imports every route to collect metadata, and my database module created its connection eagerly at import — so the build tried to boot PGlite in a worker with no database, and crashed. <strong>Fix:</strong> made the connection lazy (a Proxy that connects on first query), so importing the module is free.</div>
+  </div>
+  <div class="qa">
+    <div class="q">Bug 2 — Every score came back empty in production.</div>
+    <div class="a">The internal Node→Python call used <code>VERCEL_URL</code>, which points to the <em>deployment</em> URL. That URL has SSO "Deployment Protection" on, so the self-call was redirected to a login page and failed — every transaction hit the fail-safe and went to review with no score. <strong>Fix:</strong> pointed the internal call at the public production domain via an env var. (Good story: the fail-safe <em>worked</em> — an outage degraded to human review, exactly as designed.)</div>
+  </div>
+  <div class="qa">
+    <div class="q">Bug 3 — First deploy rejected: file over 100 MB.</div>
+    <div class="a">The 300 MB raw dataset was being uploaded. It's needed only to train locally; the committed model artifacts are what deploy. <strong>Fix:</strong> a <code>.vercelignore</code> excluding the raw data, local database, and training scripts.</div>
+  </div>
+  <div class="callout warn"><strong>Also worth mentioning:</strong> PGlite is single-writer. During testing I ran several processes against the same local database at once and corrupted it ("RuntimeError: Aborted"). Lesson: know your tool's concurrency model. Production uses Neon, which is unaffected.</div>
+</section>
+
+<!-- 10 -->
+<section>
+  <h2>10 · "Why X over Y" — master decision table</h2>
+  <p>The single most useful page for rapid review. Each row is a question you might be asked.</p>
+  <table>
+    <tr><th>Decision</th><th>Chosen</th><th>Over</th><th>Because</th></tr>
+    <tr><td>Model family</td><td>XGBoost</td><td>Logistic reg / neural net</td><td>State of the art on tabular data; captures non-linear interactions; fast, no GPU, explainable.</td></tr>
+    <tr><td>Headline metric</td><td>PR-AUC</td><td>Accuracy / ROC-AUC</td><td>Only PR focuses on the rare class; the others are flattered by the 99.83% easy negatives.</td></tr>
+    <tr><td>Train/test split</td><td>Time-based</td><td>Random</td><td>Random leaks the future into training and inflates metrics; fraud is deployed against the future.</td></tr>
+    <tr><td><code>Time</code> feature</td><td>Excluded</td><td>Included</td><td>Disjoint train/test ranges under a time split → no generalizable signal. Removing it raised PR-AUC.</td></tr>
+    <tr><td>Imbalance handling</td><td>Cost reweighting</td><td>SMOTE / undersampling</td><td>Keeps the real data distribution; no discarded signal, no fabricated fraud.</td></tr>
+    <tr><td>Decision boundary</td><td>Two tunable thresholds</td><td>One fixed 0.5 cutoff</td><td>Creates a human-review band; the cutoff is a business trade-off, not a constant.</td></tr>
+    <tr><td>Serving format</td><td>ONNX</td><td>Ship XGBoost</td><td>Tiny bundle, fast cold start, clean train/serve separation; parity-checked against the trained model.</td></tr>
+    <tr><td>Local explanations</td><td>Sensitivity analysis</td><td>Exact SHAP</td><td>SHAP is too slow for the request path; sensitivity is one batched call and honestly labeled as approximate.</td></tr>
+    <tr><td>Scorer-down behavior</td><td>Route to human</td><td>Approve / block by default</td><td>Fail safe: never silently approve, never auto-block without evidence.</td></tr>
+    <tr><td>Local database</td><td>PGlite</td><td>Docker Postgres</td><td>Zero-setup <code>clone &amp; run</code>; same SQL as prod via one dual-driver module.</td></tr>
+    <tr><td>Prod database</td><td>Neon serverless</td><td>Traditional Postgres</td><td>Serverless-friendly connection model; free tier; native Vercel integration.</td></tr>
+    <tr><td>Live traffic</td><td>Presence-driven</td><td>Cron job</td><td>Free-tier cron is daily-only; also, don't burn compute simulating traffic nobody's watching.</td></tr>
+    <tr><td>Hosting</td><td>All-on-Vercel</td><td>Split frontend/backend</td><td>One repo, one deploy, one URL; Vercel runs Python too, so the model lives beside the app.</td></tr>
+  </table>
+</section>
+
+<!-- 11 -->
+<section>
+  <h2>11 · Anticipated interview questions</h2>
+
+  <div class="qa"><div class="q">Q. Your PR-AUC is 0.80 — is that good?</div>
+  <div class="a">A. For this dataset with an honest <em>time-based</em> split, yes — random-split numbers you see online (often 0.85+) are optimistic because they leak future data. I deliberately report the harder, more realistic number. And "good" depends on the operating point: at the block threshold I get 98% precision, which is what actually matters for auto-blocking.</div></div>
+
+  <div class="qa"><div class="q">Q. How would you improve the model?</div>
+  <div class="a">A. The biggest lever isn't the algorithm — it's features. This dataset gives me anonymized PCA components; in a real system I'd engineer behavioral features: velocity (transactions per card per hour), amount relative to the card's history, geographic and merchant-category anomalies, time-since-last-transaction. Those encode the patterns fraud actually follows. After that: probability calibration, and a threshold that adapts per segment.</div></div>
+
+  <div class="qa"><div class="q">Q. How do you know the model isn't overfitting?</div>
+  <div class="a">A. It's evaluated on 56,962 transactions it never saw, drawn from a later time period than training — the hardest honest test. I also early-stop on a validation slice and keep the tree depth bounded. The gap between validation and holdout PR-AUC is small.</div></div>
+
+  <div class="qa"><div class="q">Q. What happens when fraud patterns change (drift)?</div>
+  <div class="a">A. Two things. Short term, the tunable thresholds let an operator react without retraining. Long term, the analyst approve/block decisions are stored — they're new labels. That's a retraining flywheel: the human-in-the-loop system generates its own training data. Drift monitoring (comparing live score distributions to training) is my top "next feature."</div></div>
+
+  <div class="qa"><div class="q">Q. Why serverless / why Vercel for an ML app?</div>
+  <div class="a">A. Because I separated training from serving. Serving a fixed tree ensemble is a light, stateless, bursty workload — a perfect fit for serverless. Training is offline and doesn't touch production. If the model were a large deep net needing a GPU, I'd serve it differently (a dedicated inference service), and I can talk about that trade-off.</div></div>
+
+  <div class="qa"><div class="q">Q. How would this scale to millions of transactions a day?</div>
+  <div class="a">A. The scorer is stateless and horizontally scalable — that's the easy part. The bottlenecks would be the database write path and the analyst queue. I'd move ingest to an async queue, batch DB writes, add read replicas for the dashboards, and cache aggregates. The 2 ms scoring latency itself has plenty of headroom.</div></div>
+
+  <div class="qa"><div class="q">Q. Walk me through what happens when a card is swiped.</div>
+  <div class="a">A. The transaction hits the ingest function → it calls the Python scorer over HTTP → the ONNX model returns a probability plus the top contributing factors → the decision engine compares the probability to the two thresholds → the transaction (and a review case if it's in the middle band) is written to Postgres in one atomic transaction → the dashboard picks it up on its next poll. End to end, a few milliseconds of actual compute.</div></div>
+
+  <div class="qa"><div class="q">Q. What was the hardest part?</div>
+  <div class="a">A. Honestly, the modeling judgment calls, not the code. Realizing that <code>Time</code> couldn't generalize under a time split, and that my "90% recall" threshold rule was mathematically unsatisfiable given the model's ceiling — both required understanding <em>why</em> the numbers were what they were, not just reading them off.</div></div>
+</section>
+
+<!-- 12 -->
+<section>
+  <h2>12 · Honest weaknesses &amp; what's next</h2>
+  <p>Volunteering limitations signals maturity. Have two or three ready.</p>
+  <ul>
+    <li><strong>Anonymized features cap realism.</strong> The PCA components mean I can't do the behavioral feature engineering that drives real fraud systems. I'd want raw transaction fields.</li>
+    <li><strong>No probability calibration.</strong> XGBoost scores aren't guaranteed to be true probabilities. For "expected loss" math you'd want Platt scaling or isotonic calibration.</li>
+    <li><strong>Single model, no champion/challenger.</strong> Production fraud systems A/B test models and thresholds; I have the registry table for it but not the experiment framework.</li>
+    <li><strong>No automated retraining.</strong> The analyst-label flywheel exists in the schema but isn't wired to a retraining job yet.</li>
+    <li><strong>Drift is unmonitored.</strong> My top next feature: compare live score distributions against training to detect when the world has moved.</li>
+  </ul>
+  <div class="callout"><strong>Roadmap, one line:</strong> behavioral features → probability calibration → drift monitoring → retrain-from-analyst-labels → champion/challenger threshold experiments.</div>
+</section>
+
+<!-- 13 -->
+<section>
+  <h2>13 · One-page cheat sheet</h2>
+  <table class="avoid-break">
+    <tr><th>Thing</th><th>Number / answer</th></tr>
+    <tr><td>What it is</td><td>Real-time fraud detection platform: score → auto-decide → human review</td></tr>
+    <tr><td>Dataset</td><td>ULB credit-card, 284,807 txns, 492 fraud (0.173%)</td></tr>
+    <tr><td>Model</td><td>XGBoost, depth 8, 232 trees, cost-reweighted (~545×)</td></tr>
+    <tr><td>Features</td><td>29 (V1–V28 + Amount); Time excluded on purpose</td></tr>
+    <tr><td>Headline metric</td><td>PR-AUC 0.802 (ROC-AUC 0.988) on a time-based holdout</td></tr>
+    <tr><td>Why PR-AUC</td><td>Only it focuses on the 0.17% rare class; accuracy/ROC are flattered</td></tr>
+    <tr><td>Decision</td><td>Two tunable thresholds → approve / review / block</td></tr>
+    <tr><td>Default thresholds</td><td>0.01 (approve line) / 0.99 (block line) — from capacity &amp; precision constraints</td></tr>
+    <tr><td>At block line</td><td>98% precision, 51/75 fraud caught, 1 false positive</td></tr>
+    <tr><td>Serving</td><td>ONNX (752 KB), ~2 ms, parity-checked to 1.2e-7</td></tr>
+    <tr><td>Explainability</td><td>Global SHAP (offline) + per-txn sensitivity (online); top feature V14</td></tr>
+    <tr><td>Fail-safe</td><td>Scorer down → route to human; never silent-approve or blind-block</td></tr>
+    <tr><td>Stack</td><td>Next.js + FastAPI + Neon Postgres, all on Vercel; PGlite locally</td></tr>
+    <tr><td>Tests</td><td>59 total: 16 pytest + 39 vitest + 4 Playwright e2e</td></tr>
+    <tr><td>Top 3 stories</td><td>(1) dropped Time, model improved; (2) fail-safe caught a prod outage; (3) threshold rule was unsatisfiable</td></tr>
+  </table>
+  <p class="footer-note">Written as an interview-prep companion to the Sentinel project. Live demo: sentinel-beryl-psi.vercel.app · All figures pulled from the trained model's committed metrics.</p>
+</section>
+
+</body>
+</html>
