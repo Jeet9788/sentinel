@@ -20,3 +20,14 @@ export function toTxnView(row: Transaction): TxnView {
     amount: row.amountCents / 100,
   };
 }
+
+/** A review-queue case joined to the transaction that raised it. Matches the shape of GET /api/cases. */
+export type CaseView = {
+  id: string;
+  status: "open" | "resolved";
+  resolution: "analyst_approved" | "analyst_blocked" | null;
+  note: string | null;
+  createdAt: string;
+  resolvedAt: string | null;
+  transaction: TxnView;
+};
