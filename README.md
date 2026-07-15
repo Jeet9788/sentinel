@@ -14,6 +14,40 @@ chat API.
 
 ---
 
+## Using the demo
+
+Open the [live demo](https://sentinel-beryl-psi.vercel.app) and walk the four pages.
+The **Inject fraud burst** button in the top bar pushes through a batch of
+transactions that is guaranteed to contain real fraud, so you can watch the
+system catch it on demand.
+
+1. **Overview** — the live operations dashboard. KPI tiles (scored, reviewed,
+   blocked, fraud prevented), a traffic chart with the fraud line near zero (that
+   flat line is the point — fraud is 0.17% of volume), a bimodal score
+   distribution, and a live feed of scored transactions.
+   → *Click **Inject fraud burst** and watch red `BLOCKED` rows appear with scores near 1.0.*
+2. **Review queue** — transactions the model wasn't confident enough to auto-decide.
+   Click a row to open the drawer: the score, the policy band it landed in, and
+   the top factors that flagged it. Add a note and hit **Approve** or **Block**.
+   → *This is the human-in-the-loop step; resolving a case removes it from the queue.*
+3. **Transactions** — the full searchable ledger. Filter by decision
+   (All / Approved / Review / Blocked), search by merchant or card, and page
+   through history.
+4. **Model** — the model card: PR-AUC / ROC-AUC, a "why PR-AUC not accuracy"
+   explainer, the precision–recall curve with the thresholds marked, and global
+   feature importance. The **threshold sliders** are live — drag one, watch the
+   projected approve/review/block split update, then **Save** and the system
+   decides new transactions by your policy.
+
+> The first click on a page may take a second (serverless cold start) — it warms
+> up after the first visit.
+
+**Two-minute interview flow:** open on Overview → Inject fraud burst → point at a
+blocked row → open a case in the Review queue → show the threshold tuner on the
+Model page. What you show mirrors what you say.
+
+---
+
 ## What it does
 
 - **Scores every transaction in ~2 ms** with a gradient-boosted model served as
