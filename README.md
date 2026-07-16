@@ -16,10 +16,11 @@ chat API.
 
 ## Using the demo
 
-Open the [live demo](https://sentinel-fraud-console.vercel.app) and walk the four pages.
-The **Inject fraud burst** button in the top bar pushes through a batch of
-transactions that is guaranteed to contain real fraud, so you can watch the
-system catch it on demand.
+Open the [live demo](https://sentinel-fraud-console.vercel.app). You land on a
+short intro page — click **Open live console** to enter the dashboard (at
+`/dashboard`), then walk the four pages. The **Inject fraud burst** button in the
+top bar pushes through a batch of transactions that is guaranteed to contain real
+fraud, so you can watch the system catch it on demand.
 
 1. **Overview** — the live operations dashboard. KPI tiles (scored, reviewed,
    blocked, fraud prevented), a traffic chart with the fraud line near zero (that

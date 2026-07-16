@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 const MotionLink = motion.create(Link);
 
 const LINKS = [
-  { href: "/", label: "Overview", icon: Activity },
+  { href: "/dashboard", label: "Overview", icon: Activity },
   { href: "/queue", label: "Review queue", icon: Inbox },
   { href: "/transactions", label: "Transactions", icon: Receipt },
   { href: "/model", label: "Model", icon: Cpu },
@@ -22,7 +22,7 @@ export function Nav() {
 
   return (
     <nav className="flex h-full flex-col gap-1 border-r border-sidebar-border bg-sidebar p-3 md:w-56">
-      <Link href="/" className="mb-6 flex items-center gap-2.5 px-2 pt-2">
+      <Link href="/dashboard" className="mb-6 flex items-center gap-2.5 px-2 pt-2">
         <span
           className="flex h-7 w-7 items-center justify-center rounded-md text-[13px] font-bold text-background"
           style={{ backgroundColor: "var(--series)", fontFamily: "var(--font-heading)" }}
@@ -44,7 +44,7 @@ export function Nav() {
         animate="show"
       >
         {LINKS.map(({ href, label, icon: Icon }) => {
-          const active = href === "/" ? pathname === "/" : pathname.startsWith(href);
+          const active = pathname.startsWith(href);
           return (
             <MotionLink
               key={href}

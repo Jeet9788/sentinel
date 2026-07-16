@@ -12,15 +12,23 @@ test.beforeEach(async ({ request }) => {
   await request.put("/api/settings", { data: { tLow: 0.01, tHigh: 0.99 } });
 });
 
-test("overview shows KPIs and a live feed", async ({ page }) => {
+test("landing hero opens the live console", async ({ page }) => {
   await page.goto("/");
+  await expect(page.getByRole("heading", { name: /fraud, caught in milliseconds/i })).toBeVisible();
+  await page.getByRole("button", { name: /open live console/i }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+  await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
+});
+
+test("overview shows KPIs and a live feed", async ({ page }) => {
+  await page.goto("/dashboard");
   await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
   await expect(page.getByText("Transactions scored")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Live authorizations" })).toBeVisible();
 });
 
 test("injecting a burst catches fraud in the feed", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/dashboard");
   await expect(page.getByRole("heading", { name: "Live authorizations" })).toBeVisible();
   await page.getByRole("button", { name: /inject fraud burst/i }).click();
   await expect(page.getByText(/transactions injected/i)).toBeVisible();
@@ -34,7 +42,7 @@ test("injecting a burst catches fraud in the feed", async ({ page }) => {
 test("an analyst can resolve a case from the queue", async ({ page, request }) => {
   // Widen the review band so the burst is guaranteed to open cases.
   await request.put("/api/settings", { data: { tLow: 0.0005, tHigh: 0.999999 } });
-  await page.goto("/");
+  await page.goto("/dashboard");
   await page.getByRole("button", { name: /inject fraud burst/i }).click();
   await expect(page.getByText(/transactions injected/i)).toBeVisible();
 

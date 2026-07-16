@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 
 import { MotionProvider } from "@/components/motion-provider";
-import { Nav } from "@/components/nav";
-import { SystemBar } from "@/components/system-bar";
 import { Toaster } from "@/components/ui/sonner";
 
 import "./globals.css";
@@ -33,6 +31,11 @@ export const metadata: Metadata = {
     "Real-time payment fraud detection: transactions scored on arrival, the uncertain ones routed to a human.",
 };
 
+/**
+ * Root layout: just the document shell, fonts, and app-wide providers. The
+ * console chrome (sidebar + system bar) lives in the (console) route group so the
+ * landing page can render full-bleed without it.
+ */
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
@@ -41,13 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body className="min-h-full">
         <MotionProvider>
-          <div className="flex min-h-screen">
-            <Nav />
-            <div className="flex min-w-0 flex-1 flex-col">
-              <SystemBar />
-              <main className="flex-1 p-5">{children}</main>
-            </div>
-          </div>
+          {children}
           <Toaster position="bottom-right" />
         </MotionProvider>
       </body>
