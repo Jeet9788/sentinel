@@ -10,7 +10,7 @@ explanation of why they were flagged. It is a full-stack application with a
 genuinely trained model at its core — not a notebook, and not a wrapper around a
 chat API.
 
-![Overview dashboard](docs/screenshots/overview.png)
+![Sentinel landing page](docs/screenshots/landing.png)
 
 ---
 
@@ -46,6 +46,8 @@ fraud, so you can watch the system catch it on demand.
 **Two-minute interview flow:** open on Overview → Inject fraud burst → point at a
 blocked row → open a case in the Review queue → show the threshold tuner on the
 Model page. What you show mirrors what you say.
+
+![Overview dashboard](docs/screenshots/overview.png)
 
 ---
 
