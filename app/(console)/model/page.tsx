@@ -2,6 +2,7 @@ import { PrCurveChart } from "@/components/model/pr-curve-chart";
 import { ShapChart } from "@/components/model/shap-chart";
 import { ThresholdTuner } from "@/components/model/threshold-tuner";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
+import { PageHeader } from "@/components/page-header";
 import { fmtPercent } from "@/lib/format";
 import { getSettings } from "@/lib/settings";
 import type { ThresholdRow } from "@/lib/threshold-preview";
@@ -14,15 +15,15 @@ export const dynamic = "force-dynamic";
 
 function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
   return (
-    <div className="rounded-md border border-border bg-background p-3">
-      <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{label}</p>
+    <div className="panel p-4">
+      <p className="eyebrow">{label}</p>
       <p
-        className="mt-1 text-2xl font-semibold tabular"
+        className="mt-2 text-3xl font-semibold tabular"
         style={{ fontFamily: "var(--font-heading)" }}
       >
         {value}
       </p>
-      {hint && <p className="text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>}
     </div>
   );
 }
@@ -37,7 +38,7 @@ function Panel({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-4">
+    <section className="panel p-5">
       <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
         {title}
       </h2>
@@ -52,22 +53,17 @@ export default async function ModelPage() {
   const table = metrics.thresholdTable as ThresholdRow[];
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-          Model
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {metrics.algorithm}, version {metrics.version} · trained{" "}
-          {new Date(metrics.trainedAt).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
-        </p>
-      </div>
+    <div className="space-y-5">
+      <PageHeader
+        eyebrow={`Model card · ${metrics.version}`}
+        title="Model"
+        description={`${metrics.algorithm}, trained ${new Date(metrics.trainedAt).toLocaleDateString(
+          "en-US",
+          { year: "numeric", month: "short", day: "numeric" },
+        )}.`}
+      />
 
-      <Stagger className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <Stagger className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StaggerItem>
           <Stat label="PR-AUC" value={metrics.prAuc.toFixed(3)} hint="primary metric" />
         </StaggerItem>

@@ -67,7 +67,7 @@ export function KpiTiles({ stats }: { stats?: Stats }) {
           key={tile.label}
           variants={fadeUp}
           whileHover={hoverLift}
-          className="rounded-lg border border-border bg-card p-4"
+          className="panel p-4"
         >
           <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
             {tile.label}

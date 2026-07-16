@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { DecisionBadge } from "@/components/decision-badge";
 import { FadeIn } from "@/components/motion";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -78,15 +79,19 @@ export function TransactionsView() {
   };
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-          Transactions
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Every scored transaction. {rows ? `${rows.length} loaded.` : ""}
-        </p>
-      </div>
+    <div className="space-y-5">
+      <PageHeader
+        eyebrow="Ledger"
+        title="Transactions"
+        description="Every scored transaction, filterable and searchable."
+        actions={
+          rows ? (
+            <span className="eyebrow rounded-full border border-border px-2.5 py-1">
+              {rows.length} loaded
+            </span>
+          ) : undefined
+        }
+      />
 
       <div className="flex flex-wrap items-center gap-2">
         <div className="inline-flex rounded-md border border-border p-0.5">
@@ -115,7 +120,7 @@ export function TransactionsView() {
         </div>
       </div>
 
-      <FadeIn className="overflow-hidden rounded-lg border border-border bg-card">
+      <FadeIn className="overflow-hidden panel">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

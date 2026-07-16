@@ -61,7 +61,7 @@ export function LiveFeed() {
   }, []);
 
   return (
-    <section className="rounded-lg border border-border bg-card">
+    <section className="panel">
       <header className="flex items-center justify-between border-b border-border px-4 py-3">
         <div>
           <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>

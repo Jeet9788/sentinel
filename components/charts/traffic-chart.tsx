@@ -36,7 +36,7 @@ export function TrafficChart({ stats }: { stats?: Stats }) {
   }));
 
   return (
-    <section className="rounded-lg border border-border bg-card p-4">
+    <section className="panel p-4">
       <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
         Traffic
       </h2>

@@ -66,7 +66,7 @@ export function ScoreHistogram({
   const hasData = data.some((row) => row.count !== null);
 
   return (
-    <section className="rounded-lg border border-border bg-card p-4">
+    <section className="panel p-4">
       <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
         Score distribution
       </h2>

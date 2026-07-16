@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
 import { fadeUp, staggerContainer } from "@/components/motion";
+import { PageHeader } from "@/components/page-header";
 import { CaseDrawer } from "@/components/queue/case-drawer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fmtMoney, fmtScore, timeAgo } from "@/lib/format";
@@ -64,15 +65,19 @@ export function QueueView({ tLow, tHigh }: { tLow: number; tHigh: number }) {
   const visible = (cases ?? []).filter((item) => !resolvedIds.has(item.id));
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-xl font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-          Review queue
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Transactions the model could not settle on its own, riskiest first.
-        </p>
-      </div>
+    <div className="space-y-5">
+      <PageHeader
+        eyebrow="Human review"
+        title="Review queue"
+        description="Transactions the model could not settle on its own, riskiest first."
+        actions={
+          visible.length > 0 ? (
+            <span className="eyebrow rounded-full border border-border px-2.5 py-1" style={{ color: "var(--review)" }}>
+              {visible.length} open
+            </span>
+          ) : undefined
+        }
+      />
 
       {cases === undefined ? (
         <div className="space-y-2">
@@ -81,14 +86,14 @@ export function QueueView({ tLow, tHigh }: { tLow: number; tHigh: number }) {
           ))}
         </div>
       ) : visible.length === 0 ? (
-        <div className="rounded-lg border border-border bg-card px-4 py-16 text-center">
+        <div className="panel px-4 py-16 text-center">
           <p className="text-sm font-medium">Queue clear</p>
           <p className="mt-1 text-sm text-muted-foreground">
             Nothing is waiting for review. New flags will appear here as they come in.
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
+        <div className="overflow-hidden panel">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-left text-[11px] uppercase tracking-wider text-muted-foreground">
