@@ -1,7 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
+import { fadeUp, staggerContainer } from "@/components/motion";
 import { CaseDrawer } from "@/components/queue/case-drawer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fmtMoney, fmtScore, timeAgo } from "@/lib/format";
@@ -98,10 +100,12 @@ export function QueueView({ tLow, tHigh }: { tLow: number; tHigh: number }) {
                 <th className="px-4 py-2.5 text-right font-medium sr-only">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <motion.tbody variants={staggerContainer} initial="hidden" animate="show">
               {visible.map((item) => (
-                <tr
+                <motion.tr
                   key={item.id}
+                  variants={fadeUp}
+                  whileHover={{ x: 2, transition: { duration: 0.15 } }}
                   onClick={() => setSelected(item)}
                   className="cursor-pointer border-b border-border/60 transition-colors last:border-0 hover:bg-muted/40"
                 >
@@ -127,9 +131,9 @@ export function QueueView({ tLow, tHigh }: { tLow: number; tHigh: number }) {
                   <td className="px-4 py-3 text-right">
                     <span className="text-xs text-muted-foreground">Review →</span>
                   </td>
-                </tr>
+                </motion.tr>
               ))}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
       )}

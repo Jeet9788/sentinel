@@ -4,6 +4,7 @@ import { Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { DecisionBadge } from "@/components/decision-badge";
+import { FadeIn } from "@/components/motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -114,7 +115,7 @@ export function TransactionsView() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-lg border border-border bg-card">
+      <FadeIn className="overflow-hidden rounded-lg border border-border bg-card">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -176,7 +177,7 @@ export function TransactionsView() {
             </Button>
           </div>
         )}
-      </div>
+      </FadeIn>
     </div>
   );
 }

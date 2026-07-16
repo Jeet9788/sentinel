@@ -4,6 +4,7 @@ import { TrafficChart } from "@/components/charts/traffic-chart";
 import { ScoreHistogram } from "@/components/charts/score-histogram";
 import { KpiTiles } from "@/components/kpi-tiles";
 import { LiveFeed } from "@/components/live-feed";
+import { FadeIn } from "@/components/motion";
 import { usePoll } from "@/components/use-poll";
 import type { Stats } from "@/lib/stats";
 
@@ -27,12 +28,14 @@ export function Overview({ tLow, tHigh }: { tLow: number; tHigh: number }) {
 
       <KpiTiles stats={stats} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <FadeIn className="grid gap-4 lg:grid-cols-2">
         <TrafficChart stats={stats} />
         <ScoreHistogram stats={stats} tLow={tLow} tHigh={tHigh} />
-      </div>
+      </FadeIn>
 
-      <LiveFeed />
+      <FadeIn>
+        <LiveFeed />
+      </FadeIn>
     </div>
   );
 }

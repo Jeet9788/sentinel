@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Zap } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -71,15 +72,17 @@ export function SystemBar() {
         <span className="hidden sm:inline">Scoring on model v1</span>
       </div>
 
-      <Button
-        size="sm"
-        onClick={injectBurst}
-        disabled={bursting}
-        className="gap-1.5 bg-foreground text-background hover:bg-foreground/90"
-      >
-        <Zap className="h-3.5 w-3.5" />
-        {bursting ? "Injecting…" : "Inject fraud burst"}
-      </Button>
+      <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+        <Button
+          size="sm"
+          onClick={injectBurst}
+          disabled={bursting}
+          className="gap-1.5 bg-foreground text-background hover:bg-foreground/90"
+        >
+          <Zap className="h-3.5 w-3.5" />
+          {bursting ? "Injecting…" : "Inject fraud burst"}
+        </Button>
+      </motion.div>
     </header>
   );
 }

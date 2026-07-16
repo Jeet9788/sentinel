@@ -1,3 +1,8 @@
+"use client";
+
+import { motion } from "framer-motion";
+
+import { fadeUp, hoverLift, staggerContainer } from "@/components/motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fmtMoney } from "@/lib/format";
 import type { Stats } from "@/lib/stats";
@@ -51,9 +56,19 @@ export function KpiTiles({ stats }: { stats?: Stats }) {
   ];
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <motion.div
+      className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="show"
+    >
       {tiles.map((tile) => (
-        <div key={tile.label} className="rounded-lg border border-border bg-card p-4">
+        <motion.div
+          key={tile.label}
+          variants={fadeUp}
+          whileHover={hoverLift}
+          className="rounded-lg border border-border bg-card p-4"
+        >
           <p className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
             {tile.label}
           </p>
@@ -64,8 +79,8 @@ export function KpiTiles({ stats }: { stats?: Stats }) {
             {tile.value}
           </p>
           <p className="mt-1 text-xs text-muted-foreground">{tile.hint}</p>
-        </div>
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

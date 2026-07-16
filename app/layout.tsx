@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
 
+import { MotionProvider } from "@/components/motion-provider";
 import { Nav } from "@/components/nav";
 import { SystemBar } from "@/components/system-bar";
 import { Toaster } from "@/components/ui/sonner";
@@ -39,14 +40,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       className={`dark ${grotesk.variable} ${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        <div className="flex min-h-screen">
-          <Nav />
-          <div className="flex min-w-0 flex-1 flex-col">
-            <SystemBar />
-            <main className="flex-1 p-5">{children}</main>
+        <MotionProvider>
+          <div className="flex min-h-screen">
+            <Nav />
+            <div className="flex min-w-0 flex-1 flex-col">
+              <SystemBar />
+              <main className="flex-1 p-5">{children}</main>
+            </div>
           </div>
-        </div>
-        <Toaster position="bottom-right" />
+          <Toaster position="bottom-right" />
+        </MotionProvider>
       </body>
     </html>
   );
