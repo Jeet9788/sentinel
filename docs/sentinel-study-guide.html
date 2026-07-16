@@ -79,6 +79,14 @@
   .toc .num { color: var(--accent); font-weight: 700; display: inline-block; width: 22px; }
   .avoid-break { page-break-inside: avoid; }
   .footer-note { color: var(--muted); font-size: 8.5pt; margin-top: 6px; }
+
+  figure { margin: 0 0 16px; page-break-inside: avoid; }
+  figure img {
+    width: 100%; height: auto; display: block;
+    border: 1px solid var(--line); border-radius: 6px;
+  }
+  figcaption { margin-top: 5px; font-size: 9pt; color: var(--muted); }
+  figcaption b { color: #0d1017; }
 </style>
 </head>
 <body>
@@ -115,6 +123,7 @@
     <li><span class="num">11</span> Anticipated interview questions</li>
     <li><span class="num">12</span> Honest weaknesses &amp; what's next</li>
     <li><span class="num">13</span> One-page cheat sheet</li>
+    <li><span class="num">A</span> The interface (screenshots)</li>
   </ol>
 </section>
 
@@ -431,6 +440,32 @@
     <tr><td>Top 3 stories</td><td>(1) dropped Time, model improved; (2) fail-safe caught a prod outage; (3) threshold rule was unsatisfiable</td></tr>
   </table>
   <p class="footer-note">Written as an interview-prep companion to the Sentinel project. Live demo: sentinel-fraud-console.vercel.app · All figures pulled from the trained model's committed metrics.</p>
+</section>
+
+<!-- Appendix A -->
+<section>
+  <h2>A · The interface</h2>
+  <p>The four pages of the console. If you screen-share in an interview, this is the order to walk them in — each caption notes the one thing to say on that screen.</p>
+
+  <figure>
+    <img src="screenshots/overview.png" alt="Overview dashboard" />
+    <figcaption><b>Overview — the live operations dashboard.</b> KPI tiles, an hourly traffic chart with the fraud line pinned near zero (the flat line <em>is</em> the point — fraud is 0.17% of volume), a bimodal score distribution, and a live feed of scored transactions. Say: "every transaction is scored on arrival; the model settles the easy 99%, the rest goes to a human."</figcaption>
+  </figure>
+
+  <figure>
+    <img src="screenshots/queue.png" alt="Review queue with the explanation drawer open" />
+    <figcaption><b>Review queue — human-in-the-loop.</b> The transactions the model wasn't confident enough to auto-decide. The drawer shows the score, the policy band it landed in, and the ranked "why it was flagged" factors (V14 dominating, matching the global importance). Say: "the analyst gets the model's reasoning, not just a number, and their approve/block decisions become new training labels."</figcaption>
+  </figure>
+
+  <figure>
+    <img src="screenshots/model.png" alt="Model card with the live threshold tuner" />
+    <figcaption><b>Model — the card and the live threshold tuner.</b> PR-AUC / ROC-AUC, the "why PR-AUC not accuracy" explainer, the precision–recall curve with both thresholds marked, a confusion matrix, and global SHAP importance. The sliders are live: drag one and the projected approve/review/block split updates from the holdout table. Say: "where the thresholds sit is a business decision, not a model constant — so I made it a control."</figcaption>
+  </figure>
+
+  <figure>
+    <img src="screenshots/transactions.png" alt="Transaction ledger" />
+    <figcaption><b>Transactions — the searchable ledger.</b> Every scored transaction, filterable by decision and searchable by merchant or card, with cursor pagination. Note the occasional "no score" chip — that's the fail-safe path made visible: a transaction the scorer couldn't reach, recorded and routed to review rather than silently approved.</figcaption>
+  </figure>
 </section>
 
 </body>
