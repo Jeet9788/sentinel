@@ -63,23 +63,27 @@
    there is one surface, tuned, rather than two half-tuned ones. */
 :root,
 .dark {
-  --background: #0b0e13;
+  /* Base matches the landing shader's colorBack exactly, so crossing from the
+     hero into the console never changes the room — only the lights. */
+  --background: #090c11;
   --foreground: #e6eaf2;
   --card: #141922;
   --card-foreground: #e6eaf2;
-  --popover: #141922;
+  --popover: #151b26;
   --popover-foreground: #e6eaf2;
   --primary: #e6eaf2;
   --primary-foreground: #0b0e13;
   --secondary: #1b2230;
   --secondary-foreground: #e6eaf2;
-  --muted: #1b2230;
-  --muted-foreground: #8593a8;
-  --accent: #1b2230;
+  /* Translucent neutrals: every divider, hover, and fill is white light over the
+     surface below — the same glass material as the landing's proof bar. */
+  --muted: rgba(230, 234, 242, 0.06);
+  --muted-foreground: #8ea0b8;
+  --accent: rgba(230, 234, 242, 0.08);
   --accent-foreground: #e6eaf2;
   --destructive: #e5484d;
-  --border: #232b38;
-  --input: #232b38;
+  --border: rgba(230, 234, 242, 0.09);
+  --input: rgba(230, 234, 242, 0.13);
   --ring: #4c8df6;
 
   --approved: #2e9e77;
@@ -96,14 +100,15 @@
   --chart-4: #e5484d;
   --chart-5: #9085e9;
 
-  --radius: 0.5rem;
+  --radius: 0.625rem;
   --sidebar: #0e131b;
   --sidebar-foreground: #e6eaf2;
   --sidebar-primary: #4c8df6;
   --sidebar-primary-foreground: #0b0e13;
-  --sidebar-accent: #1b2230;
+  /* Active nav gets a brand-blue tint instead of flat grey. */
+  --sidebar-accent: rgba(76, 141, 246, 0.14);
   --sidebar-accent-foreground: #e6eaf2;
-  --sidebar-border: #232b38;
+  --sidebar-border: rgba(230, 234, 242, 0.07);
   --sidebar-ring: #4c8df6;
 }
 
@@ -113,11 +118,14 @@
   }
   body {
     @apply text-foreground;
-    /* Depth, not flatness: a faint navy glow at the top edge fades to the base,
-       so the console reads as a lit surface rather than a black void. The liquid
-       metal on the landing is the same material with the lights turned up. */
+    /* The landing's liquid metal, with the motion stilled: a brand-blue aurora
+       spilling from the top edge over the same dark base. The console is lit by
+       the same light source the hero is — that is what makes them one product. */
     background-color: var(--background);
-    background-image: radial-gradient(135% 100% at 50% -25%, #121826 0%, #0b0e13 58%);
+    background-image:
+      radial-gradient(80% 55% at 50% -12%, rgba(76, 141, 246, 0.16) 0%, rgba(76, 141, 246, 0) 62%),
+      radial-gradient(50% 40% at 85% -8%, rgba(144, 133, 233, 0.08) 0%, transparent 60%),
+      radial-gradient(135% 100% at 50% -25%, #101726 0%, #090c11 60%);
     background-attachment: fixed;
     font-feature-settings: "cv05", "ss01";
   }
@@ -133,17 +141,23 @@
 }
 
 @layer components {
-  /* The console's surface language: a raised graphite panel that catches light on
-     its top edge and sits just above the page. One class, used everywhere a card
-     was, so every surface shares the same depth. */
+  /* The console's surface language: the landing proof-bar's glass, everywhere a
+     card was. Translucent white over the aurora with a backdrop blur, a catch of
+     light on the top edge, generous rounding. One class, so every surface on
+     every page is provably the same material as the hero. */
   .panel {
-    border-radius: var(--radius-lg);
-    background-image: linear-gradient(180deg, #171e29 0%, #12171f 100%);
-    border: 1px solid #232c3a;
+    border-radius: 1rem;
+    background-image: linear-gradient(
+      180deg,
+      rgba(230, 234, 242, 0.06) 0%,
+      rgba(230, 234, 242, 0.025) 100%
+    );
+    border: 1px solid rgba(230, 234, 242, 0.09);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
-      0 1px 2px 0 rgba(0, 0, 0, 0.35),
-      0 8px 24px -18px rgba(0, 0, 0, 0.7);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 12px 32px -22px rgba(0, 0, 0, 0.8);
   }
   /* An interactive panel lifts and warms its border toward the brand accent. */
   .panel-interactive {
@@ -152,11 +166,18 @@
       box-shadow 0.2s ease;
   }
   .panel-interactive:hover {
-    border-color: color-mix(in srgb, var(--series) 45%, #232c3a);
+    border-color: rgba(76, 141, 246, 0.4);
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
-      0 2px 4px 0 rgba(0, 0, 0, 0.4),
-      0 10px 30px -16px rgba(76, 141, 246, 0.4);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
+      0 12px 36px -18px rgba(76, 141, 246, 0.35);
+  }
+  /* A recessed surface for cells nested inside a panel (confusion matrix,
+     threshold summary): darker than the glass around it, so it reads as cut in
+     rather than stacked on. */
+  .panel-inset {
+    border-radius: var(--radius-lg);
+    background-color: rgba(9, 12, 17, 0.45);
+    border: 1px solid rgba(230, 234, 242, 0.07);
   }
 
   /* Mono eyebrow: the connective label that runs above every page title and
@@ -170,10 +191,25 @@
     color: var(--muted-foreground);
   }
 
-  /* Brushed-graphite sidebar with a hairline seam. */
+  /* Glass sidebar with a hairline seam — the same material as the panels,
+     slightly darker so the content area stays the brightest surface. */
   .app-sidebar {
-    background-image: linear-gradient(180deg, #0e131b 0%, #0a0d14 100%);
-    border-right: 1px solid #1a2230;
+    background-image: linear-gradient(
+      180deg,
+      rgba(16, 22, 33, 0.72) 0%,
+      rgba(10, 13, 20, 0.55) 100%
+    );
+    border-right: 1px solid rgba(230, 234, 242, 0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* The system bar floats: glass over the page, pinned to the top. */
+  .glass-bar {
+    background-color: rgba(9, 12, 17, 0.55);
+    border-bottom: 1px solid rgba(230, 234, 242, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 }
 

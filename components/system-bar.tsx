@@ -60,15 +60,19 @@ export function SystemBar() {
   }, []);
 
   return (
-    <header className="flex items-center justify-between gap-4 border-b border-border px-5 py-3">
-      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+    <header className="glass-bar sticky top-0 z-20 flex items-center justify-between gap-4 px-5 py-2.5">
+      {/* The same pill + pulse-dot the landing badge uses — the status chip is
+          the thread that carries the hero's language into the console. */}
+      <div className="inline-flex items-center gap-2 rounded-full border border-foreground/10 bg-foreground/[0.05] px-3 py-1.5 text-xs text-muted-foreground">
         <span
-          className={live ? "pulse-dot h-2 w-2 rounded-full" : "h-2 w-2 rounded-full"}
+          className={live ? "pulse-dot h-1.5 w-1.5 rounded-full" : "h-1.5 w-1.5 rounded-full"}
           style={{ backgroundColor: live ? "var(--approved)" : "var(--muted-foreground)" }}
           aria-hidden
         />
-        <span>{live ? "Stream live" : "Stream idle"}</span>
-        <span className="hidden text-border sm:inline">/</span>
+        <span className={live ? "text-foreground/85" : undefined}>
+          {live ? "Stream live" : "Stream idle"}
+        </span>
+        <span className="hidden text-foreground/20 sm:inline">/</span>
         <span className="hidden sm:inline">Scoring on model v1</span>
       </div>
 
@@ -77,7 +81,7 @@ export function SystemBar() {
           size="sm"
           onClick={injectBurst}
           disabled={bursting}
-          className="gap-1.5 bg-foreground text-background hover:bg-foreground/90"
+          className="gap-1.5 bg-foreground text-background shadow-[0_6px_24px_-6px_rgba(76,141,246,0.5)] hover:bg-foreground/90"
         >
           <Zap className="h-3.5 w-3.5" />
           {bursting ? "Injecting…" : "Inject fraud burst"}

@@ -86,7 +86,7 @@ export default async function ModelPage() {
         </StaggerItem>
       </Stagger>
 
-      <FadeIn className="rounded-lg border border-border bg-muted/30 p-4 text-xs leading-relaxed text-muted-foreground">
+      <FadeIn className="panel-inset p-4 text-xs leading-relaxed text-muted-foreground">
         <span className="font-medium text-foreground">Why PR-AUC, not accuracy.</span> At a{" "}
         {fmtPercent(metrics.dataset.fraudRate, 2)} fraud rate, a model that flags nothing is{" "}
         {fmtPercent(1 - metrics.dataset.fraudRate, 2)} accurate and catches zero fraud. Accuracy and

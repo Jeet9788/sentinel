@@ -11,7 +11,7 @@ export default function ConsoleLayout({ children }: { children: React.ReactNode 
       <Nav />
       <div className="flex min-w-0 flex-1 flex-col">
         <SystemBar />
-        <main className="flex-1 p-5">{children}</main>
+        <main className="mx-auto w-full max-w-[1440px] flex-1 p-5 lg:p-6">{children}</main>
       </div>
     </div>
   );

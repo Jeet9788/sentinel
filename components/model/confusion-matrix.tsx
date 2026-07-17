@@ -27,7 +27,7 @@ export function ConfusionMatrix({ row }: { row: ThresholdRow }) {
     <div>
       <div className="grid grid-cols-2 gap-2">
         {cells.map((cell) => (
-          <div key={cell.label} className="rounded-md border border-border bg-background p-3">
+          <div key={cell.label} className="panel-inset p-3">
             <p className="text-[11px] uppercase tracking-wider text-muted-foreground">{cell.label}</p>
             <p
               className="mt-1 text-2xl font-semibold tabular"

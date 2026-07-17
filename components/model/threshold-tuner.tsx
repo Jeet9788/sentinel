@@ -115,7 +115,7 @@ export function ThresholdTuner({
         </div>
       </div>
 
-      <div className="rounded-md border border-border bg-background p-3 text-sm">
+      <div className="panel-inset p-3 text-sm">
         <p className="leading-relaxed">
           At these settings, of the holdout traffic:{" "}
           <span style={{ color: "var(--approved)" }}>{fmtPercent(preview.pctApproved)} auto-approved</span>
