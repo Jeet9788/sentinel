@@ -22,7 +22,7 @@ export function PageHeader({
       <div className="min-w-0">
         <p className="eyebrow mb-2">{eyebrow}</p>
         <h1
-          className="text-2xl font-semibold tracking-tight"
+          className="text-3xl font-bold tracking-[-0.02em]"
           style={{ fontFamily: "var(--font-heading)" }}
         >
           {title}

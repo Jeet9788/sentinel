@@ -49,14 +49,20 @@ test("an analyst can resolve a case from the queue", async ({ page, request }) =
   await page.goto("/queue");
   const firstRow = page.locator("tbody tr").first();
   await expect(firstRow).toBeVisible({ timeout: 20_000 });
-  const before = await page.locator("tbody tr").count();
+  // The stream keeps opening cases while the test runs, so a row-count
+  // assertion races. Identify this case by its content and track it instead.
+  const merchant = (await firstRow.locator("td").nth(1).innerText()).split("\n")[0].trim();
+  const card = (await firstRow.locator("td").nth(2).innerText()).replace(/\D/g, "");
 
   await firstRow.click();
   await expect(page.getByText("Why it was flagged")).toBeVisible();
   await page.getByRole("button", { name: /^Block$/ }).click();
   await expect(page.getByText(/transaction blocked/i)).toBeVisible();
 
-  await expect(page.locator("tbody tr")).toHaveCount(before - 1);
+  // The resolved case leaves the queue, whatever else arrived meanwhile.
+  await expect(
+    page.locator("tbody tr").filter({ hasText: merchant }).filter({ hasText: card }),
+  ).toHaveCount(0, { timeout: 15_000 });
 
   await request.put("/api/settings", { data: { tLow: 0.01, tHigh: 0.99 } });
 });

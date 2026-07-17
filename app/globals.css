@@ -147,12 +147,15 @@
      every page is provably the same material as the hero. */
   .panel {
     border-radius: 1rem;
+    /* A dark underlay below the white glass: the shader stays visible as a glow
+       through the panel, but the data always sits on a calm surface. */
+    background-color: rgba(9, 12, 17, 0.5);
     background-image: linear-gradient(
       180deg,
-      rgba(230, 234, 242, 0.06) 0%,
-      rgba(230, 234, 242, 0.025) 100%
+      rgba(230, 234, 242, 0.08) 0%,
+      rgba(230, 234, 242, 0.03) 100%
     );
-    border: 1px solid rgba(230, 234, 242, 0.09);
+    border: 1px solid rgba(230, 234, 242, 0.11);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     box-shadow:

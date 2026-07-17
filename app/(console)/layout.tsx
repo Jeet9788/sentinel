@@ -1,3 +1,4 @@
+import { ConsoleBackdrop } from "@/components/console-backdrop";
 import { Nav } from "@/components/nav";
 import { SystemBar } from "@/components/system-bar";
 
@@ -8,6 +9,7 @@ import { SystemBar } from "@/components/system-bar";
 export default function ConsoleLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen">
+      <ConsoleBackdrop />
       <Nav />
       <div className="flex min-w-0 flex-1 flex-col">
         <SystemBar />
