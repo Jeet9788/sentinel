@@ -22,10 +22,12 @@ short intro page — click **Open live console** to enter the dashboard (at
 top bar pushes through a batch of transactions that is guaranteed to contain real
 fraud, so you can watch the system catch it on demand.
 
-1. **Overview** — the live operations dashboard. KPI tiles (scored, reviewed,
-   blocked, fraud prevented), a traffic chart with the fraud line near zero (that
-   flat line is the point — fraud is 0.17% of volume), a bimodal score
-   distribution, and a live feed of scored transactions.
+1. **Overview** — the live operations dashboard. KPI tiles with per-metric
+   sparklines (scored, reviewed, blocked, fraud prevented), a traffic chart with
+   the fraud line near zero (that flat line is the point — fraud is 0.17% of
+   volume), a bimodal score distribution, and a right rail with the decision
+   mix, the model card, and the riskiest open cases. A live feed of scored
+   transactions runs below.
    → *Click **Inject fraud burst** and watch red `BLOCKED` rows appear with scores near 1.0.*
 2. **Review queue** — transactions the model wasn't confident enough to auto-decide.
    Click a row to open the drawer: the score, the policy band it landed in, and
