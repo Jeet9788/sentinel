@@ -1,10 +1,15 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Cpu } from "lucide-react";
 import Link from "next/link";
 
+import { PanelHead } from "@/components/panel-head";
+
+const RADIUS = 26;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
 /**
- * The model's presence on the operations dashboard: the headline metric, and
- * the two thresholds the current policy runs on. Everything else lives on the
- * Model page — this is the "what is deciding all of this" card.
+ * The model's presence on the operations dashboard: PR-AUC as a ring gauge —
+ * the number an interviewer should ask about — plus ROC-AUC and the two policy
+ * thresholds the console currently runs on.
  */
 export function ModelSnapshot({
   prAuc,
@@ -17,54 +22,88 @@ export function ModelSnapshot({
   tLow: number;
   tHigh: number;
 }) {
+  const dashOffset = CIRCUMFERENCE * (1 - prAuc);
+
   return (
     <section className="panel panel-interactive p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-            Model v1
-          </h2>
-          <p className="text-xs text-muted-foreground">XGBoost · served as ONNX</p>
-        </div>
-        <Link
-          href="/model"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+      <PanelHead
+        icon={Cpu}
+        title="Model v1"
+        description="XGBoost · served as ONNX"
+        meta={
+          <Link
+            href="/model"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+          >
+            Tune <ArrowRight className="h-3 w-3" aria-hidden />
+          </Link>
+        }
+      />
+
+      <div className="mt-4 flex items-center gap-4">
+        {/* PR-AUC ring: the primary metric drawn as how much of the circle it fills. */}
+        <div
+          className="relative shrink-0"
+          style={{ filter: "drop-shadow(0 0 6px rgba(76, 141, 246, 0.35))" }}
         >
-          Tune <ArrowRight className="h-3 w-3" aria-hidden />
-        </Link>
-      </div>
-
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <div>
-          <p className="eyebrow">PR-AUC</p>
-          <p
-            className="mt-1 text-2xl font-semibold tabular"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {prAuc.toFixed(3)}
-          </p>
+          <svg width="72" height="72" viewBox="0 0 72 72" role="img" aria-label={`PR-AUC ${prAuc}`}>
+            <circle
+              cx="36"
+              cy="36"
+              r={RADIUS}
+              fill="none"
+              stroke="rgba(230,234,242,0.08)"
+              strokeWidth="5"
+            />
+            <circle
+              cx="36"
+              cy="36"
+              r={RADIUS}
+              fill="none"
+              stroke="var(--series)"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray={CIRCUMFERENCE}
+              strokeDashoffset={dashOffset}
+              transform="rotate(-90 36 36)"
+            />
+          </svg>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span
+              className="text-sm font-semibold tabular leading-none"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {prAuc.toFixed(3)}
+            </span>
+            <span className="eyebrow mt-0.5 text-[8px]">PR-AUC</span>
+          </div>
         </div>
-        <div>
-          <p className="eyebrow">ROC-AUC</p>
-          <p
-            className="mt-1 text-2xl font-semibold tabular"
-            style={{ fontFamily: "var(--font-heading)" }}
-          >
-            {rocAuc.toFixed(3)}
-          </p>
-        </div>
-      </div>
 
-      <div className="mt-3 flex flex-wrap gap-1.5 text-[11px]">
-        <span className="rounded-full border border-foreground/10 bg-foreground/[0.05] px-2 py-0.5 tabular">
-          approve <span style={{ color: "var(--approved)" }}>&lt; {tLow}</span>
-        </span>
-        <span className="rounded-full border border-foreground/10 bg-foreground/[0.05] px-2 py-0.5 tabular">
-          block <span style={{ color: "var(--blocked)" }}>≥ {tHigh}</span>
-        </span>
-        <span className="rounded-full border border-foreground/10 bg-foreground/[0.05] px-2 py-0.5 text-muted-foreground">
-          between → human
-        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline justify-between gap-2">
+            <span className="eyebrow">ROC-AUC</span>
+            <span
+              className="text-lg font-semibold tabular"
+              style={{ fontFamily: "var(--font-heading)" }}
+            >
+              {rocAuc.toFixed(3)}
+            </span>
+          </div>
+          <div className="mt-2 space-y-1 border-t border-border pt-2 text-[11px] tabular">
+            <p className="flex justify-between gap-2">
+              <span className="text-muted-foreground">approve below</span>
+              <span style={{ color: "var(--approved)" }}>{tLow}</span>
+            </p>
+            <p className="flex justify-between gap-2">
+              <span className="text-muted-foreground">block at</span>
+              <span style={{ color: "var(--blocked)" }}>≥ {tHigh}</span>
+            </p>
+            <p className="flex justify-between gap-2">
+              <span className="text-muted-foreground">between</span>
+              <span>→ human</span>
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

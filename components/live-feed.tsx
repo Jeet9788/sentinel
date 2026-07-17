@@ -1,9 +1,10 @@
 "use client";
 
-import { Pause, Play } from "lucide-react";
+import { Pause, Play, Radio } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { DecisionBadge } from "@/components/decision-badge";
+import { PanelHead } from "@/components/panel-head";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DECISION_COLOR, fmtMoney, fmtScore, timeAgo } from "@/lib/format";
 import type { TxnView } from "@/lib/views";
@@ -67,36 +68,55 @@ export function LiveFeed() {
 
   return (
     <section className="panel">
-      <header className="flex items-center justify-between border-b border-border px-4 py-3">
-        <div>
-          <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-            Live authorizations
-          </h2>
-          <p className="text-xs text-muted-foreground">Scored on arrival, newest first</p>
-        </div>
-        <div className="flex items-center gap-2">
-          {stale && !paused && (
-            <span className="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
-              Reconnecting…
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={() => setPaused((p) => !p)}
-            aria-pressed={paused}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-foreground/10 bg-foreground/[0.05] px-2.5 py-1 text-[11px] text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
-          >
-            {paused ? (
-              <>
-                <Play className="h-3 w-3" aria-hidden /> Resume
-              </>
-            ) : (
-              <>
-                <Pause className="h-3 w-3" aria-hidden /> Pause
-              </>
-            )}
-          </button>
-        </div>
+      <header className="border-b border-border px-4 py-3">
+        <PanelHead
+          icon={Radio}
+          color="var(--approved)"
+          title="Live authorizations"
+          description="Scored on arrival, newest first"
+          meta={
+            <>
+              {stale && !paused && (
+                <span className="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
+                  Reconnecting…
+                </span>
+              )}
+              {!paused && !stale && (
+                <span
+                  className="eyebrow inline-flex items-center gap-1.5 rounded-full border px-2 py-1"
+                  style={{
+                    color: "var(--approved)",
+                    borderColor: "color-mix(in srgb, var(--approved) 30%, transparent)",
+                    backgroundColor: "color-mix(in srgb, var(--approved) 10%, transparent)",
+                  }}
+                >
+                  <span
+                    className="pulse-dot h-1 w-1 rounded-full"
+                    style={{ backgroundColor: "var(--approved)" }}
+                    aria-hidden
+                  />
+                  Live
+                </span>
+              )}
+              <button
+                type="button"
+                onClick={() => setPaused((p) => !p)}
+                aria-pressed={paused}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-foreground/10 bg-foreground/[0.05] px-2.5 py-1 text-[11px] text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
+              >
+                {paused ? (
+                  <>
+                    <Play className="h-3 w-3" aria-hidden /> Resume
+                  </>
+                ) : (
+                  <>
+                    <Pause className="h-3 w-3" aria-hidden /> Pause
+                  </>
+                )}
+              </button>
+            </>
+          }
+        />
       </header>
 
       {!loaded ? (

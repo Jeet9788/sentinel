@@ -23,7 +23,15 @@ export function PageHeader({
         <p className="eyebrow mb-2">{eyebrow}</p>
         <h1
           className="text-3xl font-bold tracking-[-0.02em]"
-          style={{ fontFamily: "var(--font-heading)" }}
+          style={{
+            fontFamily: "var(--font-heading)",
+            // Gradient ink: white at the cap height falling to a cool grey — the
+            // same treatment display type gets on the landing's dark metal.
+            backgroundImage: "linear-gradient(180deg, #ffffff 30%, #aebacd 100%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            color: "transparent",
+          }}
         >
           {title}
         </h1>

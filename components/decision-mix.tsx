@@ -1,35 +1,44 @@
 "use client";
 
+import { PieChart } from "lucide-react";
+
+import { MetaChip, PanelHead } from "@/components/panel-head";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fmtPercent } from "@/lib/format";
 import type { Stats } from "@/lib/stats";
 
 /**
- * How the last 24 hours of traffic split across the three decisions, as one
- * segmented bar. The point of the product in a single glance: almost everything
- * is auto-approved, a sliver goes to humans, and blocking is rare and confident.
+ * How the last 24 hours of traffic split across the three decisions: one
+ * glowing segmented bar, then each decision as its own small instrument. The
+ * point of the product in a single glance — almost everything auto-approved, a
+ * sliver to humans, blocking rare and confident.
  */
 export function DecisionMix({ stats }: { stats?: Stats }) {
-  if (!stats) return <Skeleton className="h-[150px] rounded-2xl" />;
+  if (!stats) return <Skeleton className="h-[170px] rounded-2xl" />;
 
   const { txns24h, flagged24h, blocked24h } = stats.kpis;
   const approved = Math.max(0, txns24h - flagged24h - blocked24h);
   const total = Math.max(1, txns24h);
 
   const segments = [
-    { label: "Auto-approved", value: approved, color: "var(--approved)" },
-    { label: "To review", value: flagged24h, color: "var(--review)" },
+    { label: "Approved", value: approved, color: "var(--approved)" },
+    { label: "Review", value: flagged24h, color: "var(--review)" },
     { label: "Blocked", value: blocked24h, color: "var(--blocked)" },
   ];
 
   return (
     <section className="panel p-4">
-      <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-        Decision mix
-      </h2>
-      <p className="mb-3 text-xs text-muted-foreground">Last 24 hours, share of decisions</p>
+      <PanelHead
+        icon={PieChart}
+        title="Decision mix"
+        description="Share of decisions"
+        meta={<MetaChip>24h</MetaChip>}
+      />
 
-      <div className="flex h-2.5 w-full overflow-hidden rounded-full bg-foreground/[0.06]">
+      <div
+        className="mt-4 flex h-3 w-full overflow-hidden rounded-full bg-foreground/[0.06]"
+        style={{ boxShadow: "inset 0 1px 2px rgba(0,0,0,0.4)" }}
+      >
         {segments.map(
           (segment) =>
             segment.value > 0 && (
@@ -39,29 +48,37 @@ export function DecisionMix({ stats }: { stats?: Stats }) {
                 // bar where blocked fraud renders at 0px would defeat the chart.
                 style={{
                   width: `${Math.max((segment.value / total) * 100, 1.5)}%`,
-                  backgroundColor: segment.color,
+                  background: `linear-gradient(180deg, color-mix(in srgb, ${segment.color} 100%, white 12%), ${segment.color})`,
+                  boxShadow: `0 0 8px color-mix(in srgb, ${segment.color} 45%, transparent)`,
                 }}
               />
             ),
         )}
       </div>
 
-      <ul className="mt-3 space-y-1.5">
+      <div className="mt-4 grid grid-cols-3 gap-2">
         {segments.map((segment) => (
-          <li key={segment.label} className="flex items-center gap-2 text-xs">
-            <span
-              className="h-1.5 w-1.5 shrink-0 rounded-full"
-              style={{ backgroundColor: segment.color }}
-              aria-hidden
-            />
-            <span className="text-muted-foreground">{segment.label}</span>
-            <span className="ml-auto tabular">{segment.value.toLocaleString()}</span>
-            <span className="w-12 text-right tabular text-muted-foreground">
+          <div key={segment.label}>
+            <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: segment.color }}
+                aria-hidden
+              />
+              {segment.label}
+            </p>
+            <p
+              className="mt-1 text-xl font-semibold tabular"
+              style={{ fontFamily: "var(--font-heading)", color: segment.color }}
+            >
               {fmtPercent(segment.value / total, 1)}
-            </span>
-          </li>
+            </p>
+            <p className="text-[11px] text-muted-foreground tabular">
+              {segment.value.toLocaleString()}
+            </p>
+          </div>
         ))}
-      </ul>
+      </div>
     </section>
   );
 }

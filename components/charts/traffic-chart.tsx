@@ -1,10 +1,10 @@
 "use client";
 
+import { Activity } from "lucide-react";
 import {
   Area,
   CartesianGrid,
   ComposedChart,
-  Legend,
   Line,
   ResponsiveContainer,
   Tooltip,
@@ -12,6 +12,7 @@ import {
   YAxis,
 } from "recharts";
 
+import { LegendChip, MetaChip, PanelHead } from "@/components/panel-head";
 import type { Stats } from "@/lib/stats";
 
 const AXIS = "#8593a8";
@@ -63,76 +64,83 @@ export function TrafficChart({ stats, className }: { stats?: Stats; className?: 
 
   return (
     <section className={`panel p-4 ${className ?? ""}`}>
-      <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-        Traffic
-      </h2>
-      <p className="mb-3 text-xs text-muted-foreground">
-        Hourly volume, with confirmed fraud on the same scale
-      </p>
+      <PanelHead
+        icon={Activity}
+        title="Traffic"
+        description="Hourly volume, with confirmed fraud on the same scale"
+        meta={
+          <>
+            <LegendChip color="var(--series)" label="Transactions" />
+            <LegendChip color="var(--blocked)" label="Fraud" />
+            <MetaChip>24h</MetaChip>
+          </>
+        }
+      />
 
       {data.length === 0 ? (
-        <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
+        <div className="flex h-[248px] items-center justify-center text-sm text-muted-foreground">
           No traffic in the last 24 hours yet.
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={220}>
-          <ComposedChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -18 }}>
-            <defs>
-              <linearGradient id="trafficFill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--series)" stopOpacity={0.35} />
-                <stop offset="100%" stopColor="var(--series)" stopOpacity={0.02} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid stroke={GRID} vertical={false} />
-            <XAxis
-              dataKey="hour"
-              stroke={GRID}
-              tick={{ fill: AXIS, fontSize: 11 }}
-              tickLine={false}
-              interval="preserveStartEnd"
-              minTickGap={24}
-            />
-            <YAxis
-              stroke={GRID}
-              tick={{ fill: AXIS, fontSize: 11 }}
-              tickLine={false}
-              axisLine={false}
-              allowDecimals={false}
-              width={44}
-            />
-            <Tooltip
-              cursor={{ stroke: AXIS, strokeWidth: 1 }}
-              contentStyle={{
-                background: "var(--popover)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                fontSize: 12,
-              }}
-              labelStyle={{ color: "var(--muted-foreground)" }}
-            />
-            <Legend
-              iconType="plainline"
-              wrapperStyle={{ fontSize: 11, color: AXIS, paddingTop: 4 }}
-            />
-            <Area
-              type="monotone"
-              dataKey="Transactions"
-              stroke="var(--series)"
-              strokeWidth={2}
-              fill="url(#trafficFill)"
-              dot={false}
-              activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
-            />
-            <Line
-              type="monotone"
-              dataKey="Fraud"
-              stroke="var(--blocked)"
-              strokeWidth={2}
-              dot={fraudDot}
-              activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
-            />
-          </ComposedChart>
-        </ResponsiveContainer>
+        <div
+          className="mt-3"
+          style={{ filter: "drop-shadow(0 0 8px rgba(76, 141, 246, 0.18))" }}
+        >
+          <ResponsiveContainer width="100%" height={248}>
+            <ComposedChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -18 }}>
+              <defs>
+                <linearGradient id="trafficFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--series)" stopOpacity={0.35} />
+                  <stop offset="100%" stopColor="var(--series)" stopOpacity={0.02} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid stroke={GRID} vertical={false} />
+              <XAxis
+                dataKey="hour"
+                stroke={GRID}
+                tick={{ fill: AXIS, fontSize: 11 }}
+                tickLine={false}
+                interval="preserveStartEnd"
+                minTickGap={24}
+              />
+              <YAxis
+                stroke={GRID}
+                tick={{ fill: AXIS, fontSize: 11 }}
+                tickLine={false}
+                axisLine={false}
+                allowDecimals={false}
+                width={44}
+              />
+              <Tooltip
+                cursor={{ stroke: AXIS, strokeWidth: 1 }}
+                contentStyle={{
+                  background: "var(--popover)",
+                  border: "1px solid var(--border)",
+                  borderRadius: 8,
+                  fontSize: 12,
+                }}
+                labelStyle={{ color: "var(--muted-foreground)" }}
+              />
+              <Area
+                type="monotone"
+                dataKey="Transactions"
+                stroke="var(--series)"
+                strokeWidth={2}
+                fill="url(#trafficFill)"
+                dot={false}
+                activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
+              />
+              <Line
+                type="monotone"
+                dataKey="Fraud"
+                stroke="var(--blocked)"
+                strokeWidth={2}
+                dot={fraudDot}
+                activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </section>
   );

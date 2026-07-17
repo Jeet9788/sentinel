@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, Inbox } from "lucide-react";
+import { ArrowRight, ChevronRight, Inbox } from "lucide-react";
 import Link from "next/link";
 
+import { MetaChip, PanelHead } from "@/components/panel-head";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePoll } from "@/components/use-poll";
 import { fmtMoney, fmtScore, timeAgo } from "@/lib/format";
@@ -21,20 +22,27 @@ export function NeedsAttention() {
   const { data } = usePoll<CasesResponse>("/api/cases?status=open&limit=5", 10_000);
 
   return (
-    <section className="panel flex flex-col">
-      <header className="flex items-center justify-between border-b border-border px-4 py-3">
-        <div>
-          <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-            Needs attention
-          </h2>
-          <p className="text-xs text-muted-foreground">Open cases, riskiest first</p>
-        </div>
-        <Link
-          href="/queue"
-          className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Queue <ArrowRight className="h-3 w-3" aria-hidden />
-        </Link>
+    <section className="panel flex flex-col overflow-hidden">
+      <header className="border-b border-border px-4 py-3">
+        <PanelHead
+          icon={Inbox}
+          color="var(--review)"
+          title="Needs attention"
+          description="Open cases, riskiest first"
+          meta={
+            <>
+              {data && data.items.length > 0 && (
+                <MetaChip color="var(--review)">{data.items.length} open</MetaChip>
+              )}
+              <Link
+                href="/queue"
+                className="inline-flex items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Queue <ArrowRight className="h-3 w-3" aria-hidden />
+              </Link>
+            </>
+          }
+        />
       </header>
 
       {!data ? (
@@ -56,7 +64,7 @@ export function NeedsAttention() {
             <li key={id}>
               <Link
                 href="/queue"
-                className="flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-muted/60"
+                className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-muted/60"
               >
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-sm">{transaction.merchant}</p>
@@ -65,9 +73,19 @@ export function NeedsAttention() {
                   </p>
                 </div>
                 <span className="tabular text-sm">{fmtMoney(transaction.amountCents)}</span>
-                <span className="w-14 text-right tabular text-sm" style={{ color: "var(--review)" }}>
+                <span
+                  className="rounded-md px-1.5 py-0.5 text-xs tabular"
+                  style={{
+                    color: "var(--review)",
+                    backgroundColor: "color-mix(in srgb, var(--review) 14%, transparent)",
+                  }}
+                >
                   {fmtScore(transaction.score)}
                 </span>
+                <ChevronRight
+                  className="h-3.5 w-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100"
+                  aria-hidden
+                />
               </Link>
             </li>
           ))}

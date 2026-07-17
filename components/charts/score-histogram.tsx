@@ -1,5 +1,6 @@
 "use client";
 
+import { BarChart3 } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -12,6 +13,7 @@ import {
   YAxis,
 } from "recharts";
 
+import { LegendChip, MetaChip, PanelHead } from "@/components/panel-head";
 import type { Decision } from "@/lib/decision";
 import { DECISION_COLOR, DECISION_LABEL } from "@/lib/format";
 import type { Stats } from "@/lib/stats";
@@ -69,20 +71,42 @@ export function ScoreHistogram({
 
   return (
     <section className={`panel p-4 ${className ?? ""}`}>
-      <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-        Score distribution
-      </h2>
-      <p className="mb-3 text-xs text-muted-foreground">
-        Bars colored by the decision each score receives · count on a log scale
-      </p>
+      <PanelHead
+        icon={BarChart3}
+        title="Score distribution"
+        description="Bars colored by the decision each score receives"
+        meta={
+          <>
+            <LegendChip color="var(--approved)" label="Approve" />
+            <LegendChip color="var(--review)" label="Review" />
+            <LegendChip color="var(--blocked)" label="Block" />
+            <MetaChip>log scale</MetaChip>
+          </>
+        }
+      />
 
       {!hasData ? (
-        <div className="flex h-[220px] items-center justify-center text-sm text-muted-foreground">
+        <div className="flex h-[228px] items-center justify-center text-sm text-muted-foreground">
           No scored transactions in the last 24 hours yet.
         </div>
       ) : (
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="100%" height={228} className="mt-3">
           <BarChart data={data} margin={{ top: 4, right: 8, bottom: 0, left: -18 }}>
+            <defs>
+              {(["approved", "review", "blocked"] as const).map((decision) => (
+                <linearGradient
+                  key={decision}
+                  id={`hist-${decision}`}
+                  x1="0"
+                  y1="0"
+                  x2="0"
+                  y2="1"
+                >
+                  <stop offset="0%" stopColor={DECISION_COLOR[decision]} stopOpacity={1} />
+                  <stop offset="100%" stopColor={DECISION_COLOR[decision]} stopOpacity={0.45} />
+                </linearGradient>
+              ))}
+            </defs>
             <CartesianGrid stroke={GRID} vertical={false} />
             <XAxis
               dataKey="label"
@@ -135,7 +159,7 @@ export function ScoreHistogram({
             />
             <Bar dataKey="count" radius={[4, 4, 0, 0]} maxBarSize={28}>
               {data.map((row) => (
-                <Cell key={row.label} fill={DECISION_COLOR[row.decision]} />
+                <Cell key={row.label} fill={`url(#hist-${row.decision})`} />
               ))}
             </Bar>
           </BarChart>
