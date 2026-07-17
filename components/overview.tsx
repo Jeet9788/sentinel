@@ -2,14 +2,33 @@
 
 import { TrafficChart } from "@/components/charts/traffic-chart";
 import { ScoreHistogram } from "@/components/charts/score-histogram";
+import { DecisionMix } from "@/components/decision-mix";
 import { KpiTiles } from "@/components/kpi-tiles";
 import { LiveFeed } from "@/components/live-feed";
+import { ModelSnapshot } from "@/components/model-snapshot";
 import { FadeIn } from "@/components/motion";
+import { NeedsAttention } from "@/components/needs-attention";
 import { PageHeader } from "@/components/page-header";
 import { usePoll } from "@/components/use-poll";
 import type { Stats } from "@/lib/stats";
 
-export function Overview({ tLow, tHigh }: { tLow: number; tHigh: number }) {
+/**
+ * The ops console layout: KPI strip, then an asymmetric grid — the two big
+ * charts carry the left two-thirds, and the right rail answers the operator's
+ * three standing questions: how is traffic splitting, what needs a human, and
+ * what model is deciding all of this. The live feed runs full-width below.
+ */
+export function Overview({
+  tLow,
+  tHigh,
+  prAuc,
+  rocAuc,
+}: {
+  tLow: number;
+  tHigh: number;
+  prAuc: number;
+  rocAuc: number;
+}) {
   const { data: stats, stale } = usePoll<Stats>("/api/stats", 10_000);
 
   return (
@@ -31,9 +50,14 @@ export function Overview({ tLow, tHigh }: { tLow: number; tHigh: number }) {
 
       <KpiTiles stats={stats} />
 
-      <FadeIn className="grid gap-5 lg:grid-cols-2">
-        <TrafficChart stats={stats} />
-        <ScoreHistogram stats={stats} tLow={tLow} tHigh={tHigh} />
+      <FadeIn className="grid gap-5 lg:grid-cols-3">
+        <TrafficChart stats={stats} className="lg:col-span-2" />
+        <div className="flex flex-col gap-5">
+          <DecisionMix stats={stats} />
+          <ModelSnapshot prAuc={prAuc} rocAuc={rocAuc} tLow={tLow} tHigh={tHigh} />
+        </div>
+        <ScoreHistogram stats={stats} tLow={tLow} tHigh={tHigh} className="lg:col-span-2" />
+        <NeedsAttention />
       </FadeIn>
 
       <FadeIn>

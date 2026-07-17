@@ -54,7 +54,7 @@ function fraudDot(props: {
  * that makes it look like half the business. It shares the axis and stays a thin
  * line near zero, which is the truth and is exactly why the model is needed.
  */
-export function TrafficChart({ stats }: { stats?: Stats }) {
+export function TrafficChart({ stats, className }: { stats?: Stats; className?: string }) {
   const data = (stats?.traffic ?? []).map((row) => ({
     hour: hour(row.hour),
     Transactions: row.count,
@@ -62,7 +62,7 @@ export function TrafficChart({ stats }: { stats?: Stats }) {
   }));
 
   return (
-    <section className="panel p-4">
+    <section className={`panel p-4 ${className ?? ""}`}>
       <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
         Traffic
       </h2>

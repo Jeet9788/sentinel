@@ -47,10 +47,12 @@ export function ScoreHistogram({
   stats,
   tLow,
   tHigh,
+  className,
 }: {
   stats?: Stats;
   tLow: number;
   tHigh: number;
+  className?: string;
 }) {
   const data = (stats?.histogram ?? []).map((row) => ({
     bucket: row.bucket,
@@ -66,7 +68,7 @@ export function ScoreHistogram({
   const hasData = data.some((row) => row.count !== null);
 
   return (
-    <section className="panel p-4">
+    <section className={`panel p-4 ${className ?? ""}`}>
       <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
         Score distribution
       </h2>
