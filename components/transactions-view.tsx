@@ -1,16 +1,17 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Receipt, Search } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { DecisionBadge } from "@/components/decision-badge";
 import { FadeIn } from "@/components/motion";
 import { PageHeader } from "@/components/page-header";
+import { MetaChip, PanelHead } from "@/components/panel-head";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Decision } from "@/lib/decision";
-import { fmtMoney, fmtScore, timeAgo } from "@/lib/format";
+import { DECISION_COLOR, fmtMoney, fmtScore, timeAgo } from "@/lib/format";
 import type { TxnView } from "@/lib/views";
 
 type DecisionFilter = "all" | Decision;
@@ -84,27 +85,28 @@ export function TransactionsView() {
         eyebrow="Ledger"
         title="Transactions"
         description="Every scored transaction, filterable and searchable."
-        actions={
-          rows ? (
-            <span className="eyebrow rounded-full border border-border px-2.5 py-1">
-              {rows.length} loaded
-            </span>
-          ) : undefined
-        }
+        actions={rows ? <MetaChip>{rows.length} loaded</MetaChip> : undefined}
       />
 
       <div className="flex flex-wrap items-center gap-2">
-        <div className="inline-flex rounded-md border border-border p-0.5">
+        <div className="inline-flex rounded-full border border-foreground/10 bg-foreground/[0.04] p-0.5">
           {FILTERS.map((filter) => (
             <button
               key={filter.value}
               onClick={() => setDecision(filter.value)}
-              className={`rounded px-3 py-1 text-sm transition-colors ${
+              className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3 py-1 text-sm transition-colors ${
                 decision === filter.value
-                  ? "bg-secondary text-foreground"
+                  ? "bg-foreground/10 text-foreground"
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
+              {filter.value !== "all" && (
+                <span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ backgroundColor: DECISION_COLOR[filter.value] }}
+                  aria-hidden
+                />
+              )}
               {filter.label}
             </button>
           ))}
@@ -121,6 +123,13 @@ export function TransactionsView() {
       </div>
 
       <FadeIn className="overflow-hidden panel">
+        <header className="border-b border-border px-4 py-3">
+          <PanelHead
+            icon={Receipt}
+            title="Ledger entries"
+            description="Newest first · every score is a real out-of-sample prediction"
+          />
+        </header>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -162,7 +171,10 @@ export function TransactionsView() {
                       •••• {row.cardLast4}
                     </td>
                     <td className="px-4 py-3 text-right tabular">{fmtMoney(row.amountCents)}</td>
-                    <td className="px-4 py-3 text-right tabular text-muted-foreground">
+                    <td
+                      className="px-4 py-3 text-right tabular"
+                      style={{ color: DECISION_COLOR[row.decision] }}
+                    >
                       {fmtScore(row.score)}
                     </td>
                     <td className="px-4 py-3">

@@ -1,8 +1,11 @@
+import { Layers, SlidersHorizontal, Spline, type LucideIcon } from "lucide-react";
+
 import { PrCurveChart } from "@/components/model/pr-curve-chart";
 import { ShapChart } from "@/components/model/shap-chart";
 import { ThresholdTuner } from "@/components/model/threshold-tuner";
 import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import { PageHeader } from "@/components/page-header";
+import { PanelHead } from "@/components/panel-head";
 import { fmtPercent } from "@/lib/format";
 import { getSettings } from "@/lib/settings";
 import type { ThresholdRow } from "@/lib/threshold-preview";
@@ -13,37 +16,63 @@ import shapSummary from "@/models/v1/shap_summary.json";
 
 export const dynamic = "force-dynamic";
 
-function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
+function Stat({
+  label,
+  value,
+  hint,
+  accent = "var(--series)",
+}: {
+  label: string;
+  value: string;
+  hint?: string;
+  accent?: string;
+}) {
   return (
-    <div className="panel p-4">
-      <p className="eyebrow">{label}</p>
+    <div className="panel relative overflow-hidden p-4">
+      {/* Same material language as the dashboard KPI tiles: a lit top edge and
+          a corner aura in the stat's accent color. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-4 top-0 h-px"
+        style={{
+          background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
+          opacity: 0.8,
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-10 -top-14 h-36 w-36 rounded-full blur-3xl"
+        style={{ backgroundColor: accent, opacity: 0.12 }}
+      />
+      <p className="eyebrow relative">{label}</p>
       <p
-        className="mt-2 text-3xl font-semibold tabular"
+        className="relative mt-2 text-[34px] font-semibold leading-none tracking-tight tabular"
         style={{ fontFamily: "var(--font-heading)" }}
       >
         {value}
       </p>
-      {hint && <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>}
+      {hint && <p className="relative mt-1.5 text-[11px] text-muted-foreground">{hint}</p>}
     </div>
   );
 }
 
 function Panel({
+  icon,
+  color,
   title,
   description,
   children,
 }: {
+  icon: LucideIcon;
+  color?: string;
   title: string;
   description: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="panel p-5">
-      <h2 className="text-sm font-semibold" style={{ fontFamily: "var(--font-heading)" }}>
-        {title}
-      </h2>
-      <p className="mb-4 text-xs text-muted-foreground">{description}</p>
-      {children}
+      <PanelHead icon={icon} color={color} title={title} description={description} />
+      <div className="mt-4">{children}</div>
     </section>
   );
 }
@@ -75,6 +104,7 @@ export default async function ModelPage() {
             label="Fraud rate"
             value={fmtPercent(metrics.dataset.fraudRate, 2)}
             hint={`${metrics.dataset.frauds} of ${metrics.dataset.rows.toLocaleString()}`}
+            accent="var(--blocked)"
           />
         </StaggerItem>
         <StaggerItem>
@@ -82,6 +112,7 @@ export default async function ModelPage() {
             label="Holdout"
             value={metrics.dataset.testRows.toLocaleString()}
             hint={`${metrics.dataset.testFrauds} frauds, unseen in training`}
+            accent="var(--approved)"
           />
         </StaggerItem>
       </Stagger>
@@ -96,6 +127,7 @@ export default async function ModelPage() {
 
       <FadeIn className="grid gap-4 lg:grid-cols-2">
         <Panel
+          icon={Spline}
           title="Precision–recall curve"
           description="The trade-off the thresholds ride, measured on the holdout"
         >
@@ -103,6 +135,8 @@ export default async function ModelPage() {
         </Panel>
 
         <Panel
+          icon={SlidersHorizontal}
+          color="var(--review)"
           title="Threshold policy"
           description="Turn the model's probability into approve / review / block"
         >
@@ -112,6 +146,7 @@ export default async function ModelPage() {
 
       <FadeIn>
         <Panel
+          icon={Layers}
           title="What drives the model"
           description="Exact global SHAP importance over the holdout · top 12 features"
         >

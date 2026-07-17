@@ -55,7 +55,7 @@ test("an analyst can resolve a case from the queue", async ({ page, request }) =
   const card = (await firstRow.locator("td").nth(2).innerText()).replace(/\D/g, "");
 
   await firstRow.click();
-  await expect(page.getByText("Why it was flagged")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Why it was flagged" })).toBeVisible();
   await page.getByRole("button", { name: /^Block$/ }).click();
   await expect(page.getByText(/transaction blocked/i)).toBeVisible();
 
