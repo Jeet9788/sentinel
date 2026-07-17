@@ -22,6 +22,32 @@ function hour(iso: string) {
 }
 
 /**
+ * Fraud hours get a marker dot, not just a line: at 0.17% the fraud line hugs
+ * zero, so a shape is what makes an event findable — and it does not rely on
+ * color alone to say "something happened here".
+ */
+function fraudDot(props: {
+  cx?: number;
+  cy?: number;
+  index?: number;
+  payload?: { Fraud?: number };
+}) {
+  const { cx, cy, index, payload } = props;
+  if (!payload?.Fraud || cx == null || cy == null) return <g key={`fraud-dot-${index}`} />;
+  return (
+    <circle
+      key={`fraud-dot-${index}`}
+      cx={cx}
+      cy={cy}
+      r={3.5}
+      fill="var(--blocked)"
+      stroke="var(--background)"
+      strokeWidth={1.5}
+    />
+  );
+}
+
+/**
  * Volume over the last 24 hours, with confirmed fraud drawn on the same axis.
  *
  * Fraud is ~0.17% of traffic, so plotting it on its own y-axis would be a lie
@@ -102,7 +128,7 @@ export function TrafficChart({ stats }: { stats?: Stats }) {
               dataKey="Fraud"
               stroke="var(--blocked)"
               strokeWidth={2}
-              dot={false}
+              dot={fraudDot}
               activeDot={{ r: 4, strokeWidth: 2, stroke: "var(--card)" }}
             />
           </ComposedChart>

@@ -17,7 +17,14 @@ export type Stats = {
     fraudPreventedCents: number;
     openCases: number;
   };
-  traffic: { hour: string; count: number; frauds: number }[];
+  traffic: {
+    hour: string;
+    count: number;
+    frauds: number;
+    reviews: number;
+    blocked: number;
+    preventedCents: number;
+  }[];
   histogram: {
     bucket: number;
     count: number;
@@ -54,6 +61,13 @@ export async function getStats(): Promise<Stats> {
       hour: sql<string>`date_trunc('hour', ${transactions.ts})`,
       count: sql<number>`count(*)::int`,
       frauds: sql<number>`count(*) filter (where ${transactions.isFraudTruth} = true)::int`,
+      // Per-decision hourly series so each KPI tile can show its own trend,
+      // not just a point-in-time number.
+      reviews: sql<number>`count(*) filter (where ${transactions.decision} = 'review')::int`,
+      blocked: sql<number>`count(*) filter (where ${transactions.decision} = 'blocked')::int`,
+      preventedCents: sql<number>`coalesce(sum(${transactions.amountCents}) filter (
+        where ${transactions.decision} = 'blocked' and ${transactions.isFraudTruth} = true
+      ), 0)::int`,
     })
     .from(transactions)
     .where(gte(transactions.ts, DAY))
@@ -94,6 +108,9 @@ export async function getStats(): Promise<Stats> {
       hour: new Date(row.hour).toISOString(),
       count: Number(row.count),
       frauds: Number(row.frauds),
+      reviews: Number(row.reviews),
+      blocked: Number(row.blocked),
+      preventedCents: Number(row.preventedCents),
     })),
     histogram: Array.from({ length: 20 }, (_, i) => {
       const row = byBucket.get(i);

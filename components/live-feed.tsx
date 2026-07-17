@@ -1,5 +1,6 @@
 "use client";
 
+import { Pause, Play } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import { DecisionBadge } from "@/components/decision-badge";
@@ -22,9 +23,13 @@ export function LiveFeed() {
   const [arrived, setArrived] = useState<Set<string>>(new Set());
   const [stale, setStale] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  // Moving content must be stoppable (WCAG 2.2.2). Pausing stops the polling;
+  // the cursor survives, so resuming catches up rather than losing rows.
+  const [paused, setPaused] = useState(false);
   const cursor = useRef(0);
 
   useEffect(() => {
+    if (paused) return;
     let cancelled = false;
     let timer: ReturnType<typeof setTimeout>;
     let backoff = POLL_MS;
@@ -58,7 +63,7 @@ export function LiveFeed() {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, []);
+  }, [paused]);
 
   return (
     <section className="panel">
@@ -69,11 +74,29 @@ export function LiveFeed() {
           </h2>
           <p className="text-xs text-muted-foreground">Scored on arrival, newest first</p>
         </div>
-        {stale && (
-          <span className="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
-            Reconnecting…
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {stale && !paused && (
+            <span className="rounded-full bg-muted px-2 py-1 text-[11px] text-muted-foreground">
+              Reconnecting…
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => setPaused((p) => !p)}
+            aria-pressed={paused}
+            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-foreground/10 bg-foreground/[0.05] px-2.5 py-1 text-[11px] text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
+          >
+            {paused ? (
+              <>
+                <Play className="h-3 w-3" aria-hidden /> Resume
+              </>
+            ) : (
+              <>
+                <Pause className="h-3 w-3" aria-hidden /> Pause
+              </>
+            )}
+          </button>
+        </div>
       </header>
 
       {!loaded ? (
